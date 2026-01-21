@@ -1,7 +1,56 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 
+const AnimatedWord = ({ children, index }: { children: React.ReactNode; index: number }) => {
+  const wordRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.classList.add('opacity-100', 'translate-y-0');
+              entry.target.classList.remove('opacity-0', 'translate-y-4');
+            }, index * 30);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    if (wordRef.current) {
+      observer.observe(wordRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [index]);
+
+  return (
+    <span
+      ref={wordRef}
+      className="inline-block opacity-0 translate-y-4 transition-all duration-500 ease-out"
+    >
+      {children}
+    </span>
+  );
+};
+
 const AboutIntro = () => {
+  const primaryWords = [
+    "I'm", "Abhinav", "——", "a", "Full", "Stack,", "iOS", "Developer", "&",
+    "UI/UX", "Designer", "crafting", "fast,", "scalable,", "and", "immersive",
+    "digital", "experiences", "that", "merge", "creativity", "with", "engineering", "precision."
+  ];
+
+  const secondaryWords = [
+    "I", "specialize", "in", "developing", "SaaS", "platforms,", "AI-driven",
+    "products,", "and", "interactive", "3D", "web", "experiences", "using",
+    "technologies", "like", "Next.js,", "Node.js,", "and", "Three.js."
+  ];
+
   return (
     <section 
       className="relative flex flex-col items-center w-full min-h-screen text-white z-50 gap-[4rem] -mt-[2rem] bg-[#111111] font-display"
@@ -19,142 +68,24 @@ const AboutIntro = () => {
 
       {/* Primary Paragraph */}
       <div className="z-[60] text-white text-3xl leading-[1.1] lg:text-4xl xl:text-5xl text-center pt-24 lg:pt-32 xl:max-w-6xl lg:max-w-5xl w-full mx-auto px-6">
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">I&apos;m</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">Abhinav</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">——</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">a</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">Full</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">Stack,</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">iOS</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">Developer</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">&amp;</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">UI/UX</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">Designer</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">crafting</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">fast,</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">scalable,</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">and</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">immersive</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">digital</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">experiences</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">that</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">merge</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">creativity</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">with</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">engineering</span>
-        </span>
-        <span className="inline-block overflow-hidden">
-          <span className="inline-block mb-[0.2rem]">precision.</span>
-        </span>
+        {primaryWords.map((word, index) => (
+          <span key={index} className="inline-block overflow-hidden mr-3">
+            <AnimatedWord index={index}>
+              <span className="inline-block mb-[0.2rem]">{word}</span>
+            </AnimatedWord>
+          </span>
+        ))}
       </div>
 
       {/* Secondary Paragraph */}
       <div className="text-white/80 text-lg md:text-2xl lg:text-2xl xl:text-3xl text-center mb-1 max-w-5xl mx-auto px-6 font-display font-light">
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">I</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">specialize</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">in</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">developing</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">SaaS</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">platforms,</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">AI-driven</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">products,</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">and</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">interactive</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">3D</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">web</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">experiences</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">using</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">technologies</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">like</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">Next.js,</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">Node.js,</span>
-        </span>
-        <span className="inline-block overflow-hidden mr-2">
-          <span className="inline-block mb-[0.2rem]">and</span>
-        </span>
-        <span className="inline-block overflow-hidden">
-          <span className="inline-block mb-[0.2rem]">Three.js.</span>
-        </span>
+        {secondaryWords.map((word, index) => (
+          <span key={index} className="inline-block overflow-hidden mr-2">
+            <AnimatedWord index={index + primaryWords.length}>
+              <span className="inline-block mb-[0.2rem]">{word}</span>
+            </AnimatedWord>
+          </span>
+        ))}
       </div>
 
       {/* About Me Magnetic-style Button Section */}
