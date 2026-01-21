@@ -5,31 +5,52 @@ import Image from 'next/image';
 
 const ProfileStats: React.FC = () => {
   const imageRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.8);
+  const [scale, setScale] = useState(0.6);
+  const [borderRadius, setBorderRadius] = useState(48);
+  const [opacity, setOpacity] = useState(0.5);
 
   useEffect(() => {
+    let animationFrameId: number;
+    
     const handleScroll = () => {
-      if (!imageRef.current) return;
+      animationFrameId = requestAnimationFrame(() => {
+        if (!imageRef.current) return;
 
-      const rect = imageRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      const elementCenter = rect.top + rect.height / 2;
-      const viewportCenter = windowHeight / 2;
-      
-      const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-      const maxDistance = windowHeight;
-      
-      const progress = 1 - Math.min(distanceFromCenter / maxDistance, 1);
-      
-      const newScale = 0.8 + (progress * 0.2);
-      setScale(Math.min(Math.max(newScale, 0.8), 1));
+        const rect = imageRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        const startTrigger = windowHeight * 0.9;
+        const endTrigger = windowHeight * 0.2;
+        
+        let progress = 0;
+        
+        if (rect.top <= startTrigger && rect.top >= endTrigger) {
+          progress = (startTrigger - rect.top) / (startTrigger - endTrigger);
+        } else if (rect.top < endTrigger) {
+          progress = 1;
+        }
+        
+        progress = Math.max(0, Math.min(1, progress));
+        
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        
+        const newScale = 0.6 + (easeOutCubic * 0.4);
+        const newBorderRadius = 48 - (easeOutCubic * 40);
+        const newOpacity = 0.5 + (easeOutCubic * 0.5);
+        
+        setScale(newScale);
+        setBorderRadius(newBorderRadius);
+        setOpacity(newOpacity);
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   return (
@@ -38,8 +59,13 @@ const ProfileStats: React.FC = () => {
       <div className="container max-w-[1280px] px-8 lg:px-16 flex flex-col items-center">
         <div 
           ref={imageRef}
-          className="relative w-full group overflow-hidden bg-[#D1D1D1]/20 rounded-lg transition-transform duration-100 ease-out"
-          style={{ transform: `scale(${scale})` }}
+          className="relative w-full group overflow-hidden bg-[#D1D1D1]/20 will-change-transform"
+          style={{ 
+            transform: `scale(${scale})`,
+            borderRadius: `${borderRadius}px`,
+            opacity: opacity,
+            transition: 'transform 0.1s ease-out, border-radius 0.1s ease-out, opacity 0.1s ease-out'
+          }}
         >
           {/* Grayscale image that transitions on hover */}
           <div className="relative aspect-[4/5] md:aspect-[16/10] lg:aspect-[16/9] w-full overflow-hidden">
