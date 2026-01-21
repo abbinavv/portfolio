@@ -4,7 +4,7 @@ import { Smartphone, Monitor, Disc, Network } from 'lucide-react';
 const services = [
   {
     index: '01',
-    title: 'iOS Developer',
+    title: 'Full Stack Developer',
     description: 'Building high-performance native iOS applications using Swift and SwiftUI. Creating seamless user experiences with elegant UI and robust architectures across the Apple ecosystem.',
     icon: <Smartphone className="w-8 h-8 text-[#111111]" />,
   },
