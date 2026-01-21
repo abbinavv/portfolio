@@ -22,22 +22,20 @@ const HeroSection: React.FC = () => {
 
   return (
     <section className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-[#E6E6E6]">
-      {/* 3D Glassy Object Background/Overlay */}
-      <div className="absolute 2xl:-top-[5.5rem] xl:-top-[5rem] lg:-top-[6rem] top-[16rem] lg:-right-3 -z-10 w-full h-full pointer-events-none opacity-80 md:opacity-100">
-        <span className="relative overflow-hidden w-full h-full block">
+      {/* 3D Glassy Object Background - Centered behind text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+        <div className="relative w-[150vw] h-[150vh] lg:w-[120vw] lg:h-[120vh] xl:w-[100vw] xl:h-[100vh] -mt-[10rem] lg:-mt-[5rem]">
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="obj3d w-full h-full object-cover grayscale brightness-110"
+            className="w-full h-full object-contain grayscale brightness-110 opacity-80 md:opacity-100"
           >
             <source src="https://azizkhaldi.com/_next/static/media/glassyObj.3c74f580.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          {/* Subtle bottom gradient to blend video if needed, though the original uses a mask div */}
-          <span className="w-full h-[15rem] bg-[#E6E6E6] absolute -bottom-[1px] right-0 z-20"></span>
-        </span>
+        </div>
       </div>
 
       {/* Left Sidebar: Socials and Decorative Line */}
