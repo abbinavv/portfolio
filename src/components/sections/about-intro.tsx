@@ -41,6 +41,15 @@ const AboutIntro = () => {
           <span className="inline-block mb-[0.2rem]">Developer</span>
         </span>
         <span className="inline-block overflow-hidden mr-3">
+          <span className="inline-block mb-[0.2rem]">&amp;</span>
+        </span>
+        <span className="inline-block overflow-hidden mr-3">
+          <span className="inline-block mb-[0.2rem]">iOS</span>
+        </span>
+        <span className="inline-block overflow-hidden mr-3">
+          <span className="inline-block mb-[0.2rem]">Developer</span>
+        </span>
+        <span className="inline-block overflow-hidden mr-3">
           <span className="inline-block mb-[0.2rem]">crafting</span>
         </span>
         <span className="inline-block overflow-hidden mr-3">
