@@ -52,12 +52,9 @@ const AboutIntro = () => {
   ];
 
   return (
-    <section 
-      className="relative flex flex-col items-center w-full min-h-screen text-white z-50 gap-[4rem] -mt-[2rem] bg-[#111111] font-display"
-      style={{
-        backgroundColor: '#111111',
-      }}
-    >
+      <section 
+        className="relative flex flex-col items-center w-full min-h-screen text-white z-50 gap-12 lg:gap-16 bg-[#111111] font-display"
+      >
       {/* Top Curve Effect */}
       <div className="overflow-hidden absolute left-[50%] lg:-top-[3rem] -top-[2rem] transform translate-x-[-50%] w-[100%] lg:h-[4rem] h-[2rem] mb-14 z-40">
         <div 
@@ -67,7 +64,7 @@ const AboutIntro = () => {
       </div>
 
       {/* Primary Paragraph */}
-      <div className="z-[60] text-white text-3xl leading-[1.1] lg:text-4xl xl:text-5xl text-center pt-24 lg:pt-32 xl:max-w-6xl lg:max-w-5xl w-full mx-auto px-6">
+        <div className="z-[60] text-white text-2xl sm:text-3xl lg:text-4xl xl:text-5xl leading-[1.15] text-center pt-20 lg:pt-28 max-w-5xl mx-auto px-6">
         {primaryWords.map((word, index) => (
           <span key={index} className="inline-block overflow-hidden mr-3">
             <AnimatedWord index={index}>
@@ -78,7 +75,7 @@ const AboutIntro = () => {
       </div>
 
       {/* Secondary Paragraph */}
-      <div className="text-white/80 text-lg md:text-2xl lg:text-2xl xl:text-3xl text-center mb-1 max-w-5xl mx-auto px-6 font-display font-light">
+        <div className="text-white/80 text-base sm:text-lg md:text-xl lg:text-2xl text-center max-w-4xl mx-auto px-6 font-light">
         {secondaryWords.map((word, index) => (
           <span key={index} className="inline-block overflow-hidden mr-2">
             <AnimatedWord index={index + primaryWords.length}>
@@ -89,7 +86,7 @@ const AboutIntro = () => {
       </div>
 
       {/* About Me Magnetic-style Button Section */}
-      <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-4">
         <Link href="/about-me" className="group">
           <div className="relative flex items-center justify-center cursor-pointer select-none">
             {/* Pill Button Body */}
@@ -139,7 +136,7 @@ const AboutIntro = () => {
       </div>
 
       {/* Footer Meta Info in Section */}
-      <div className="flex overflow-hidden justify-between items-center text-xs tracking-widest uppercase text-[#E6E6E6]/40 px-6 w-full max-w-5xl pb-10">
+        <div className="flex overflow-hidden justify-between items-center text-xs tracking-widest uppercase text-[#E6E6E6]/40 px-6 w-full max-w-5xl mt-auto pb-8">
         <div className="flex items-center gap-3">
           <svg className="w-4 h-4 fill-current opacity-40" viewBox="0 0 24 24">
             <path d="M12 4.5v15m0 0l-4.5-4.5m4.5 4.5l4.5-4.5"></path>

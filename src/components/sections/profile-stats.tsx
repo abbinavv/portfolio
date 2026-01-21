@@ -53,10 +53,9 @@ const ProfileStats: React.FC = () => {
     };
   }, []);
 
-  return (
-    <section className="relative w-full bg-white font-display flex flex-col items-center pt-24 pb-32">
-      {/* Profile Image Container */}
-      <div className="container max-w-[1280px] px-8 lg:px-16 flex flex-col items-center">
+    return (
+      <section className="relative w-full bg-white font-display flex flex-col items-center pt-16 lg:pt-24 pb-20 lg:pb-28">
+        <div className="container max-w-[1280px] px-6 lg:px-12 flex flex-col items-center">
         <div 
           ref={imageRef}
           className="relative w-full group overflow-hidden bg-[#D1D1D1]/20 will-change-transform"
@@ -80,31 +79,24 @@ const ProfileStats: React.FC = () => {
           </div>
         </div>
 
-        {/* Statistics Row */}
-        <div className="w-full mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-start">
+          <div className="w-full mt-16 lg:mt-20 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-start">
           
-          {/* Experience Stat */}
-          <div className="flex flex-col space-y-4 border-t border-black/10 pt-8">
-            <span className="text-[0.75rem] font-medium tracking-[0.2em] text-black/50 uppercase">
+          <div className="flex flex-col space-y-3 border-t border-black/10 pt-6">
+            <span className="text-[0.7rem] font-medium tracking-[0.2em] text-black/50 uppercase">
               Years of Experience
             </span>
-            <div className="flex items-baseline">
-              <span className="text-[5rem] md:text-[6rem] lg:text-[8rem] font-medium leading-[0.9] tracking-tighter">
-                4+
-              </span>
-            </div>
+            <span className="text-[4rem] md:text-[5rem] lg:text-[6rem] font-medium leading-[0.9] tracking-tighter">
+              4+
+            </span>
           </div>
 
-          {/* Projects Stat */}
-          <div className="flex flex-col space-y-4 border-t border-black/10 pt-8">
-            <span className="text-[0.75rem] font-medium tracking-[0.2em] text-black/50 uppercase">
+          <div className="flex flex-col space-y-3 border-t border-black/10 pt-6">
+            <span className="text-[0.7rem] font-medium tracking-[0.2em] text-black/50 uppercase">
               Projects Completed
             </span>
-            <div className="flex items-baseline">
-              <span className="text-[5rem] md:text-[6rem] lg:text-[8rem] font-medium leading-[0.9] tracking-tighter">
-                30+
-              </span>
-            </div>
+            <span className="text-[4rem] md:text-[5rem] lg:text-[6rem] font-medium leading-[0.9] tracking-tighter">
+              30+
+            </span>
           </div>
 
         </div>
