@@ -108,7 +108,7 @@ const HeroSection: React.FC = () => {
       {/* Right Name Tag: Vertical Label */}
       <div className="item absolute hidden font-display -mt-10 lg:block -rotate-90 top-[40%] -right-[6.5%] transform -translate-y-1/2 tracking-widest opacity-80 select-none">
         <span className="text-[0.8rem] leading-none whitespace-nowrap">
-          KHALID AHMED ABDELAZIZ
+          ABHINAV RAJ
         </span>
       </div>
 

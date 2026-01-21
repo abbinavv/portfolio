@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aziz Khaldi - Full Stack Developer & UI/UX Designer",
+  title: "Abhinav Raj - Full Stack Developer & UI/UX Designer",
   description: "Full Stack Developer crafting fast, scalable, and immersive digital experiences that merge creativity with engineering precision.",
 };
 

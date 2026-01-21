@@ -72,7 +72,7 @@ const Footer = () => {
             
             <div className="hidden lg:block mt-20">
               <span className="text-[#444444] text-[180px] font-medium leading-none tracking-tighter opacity-10">
-                AZIZ
+                ABHINAV
               </span>
             </div>
           </div>
@@ -121,7 +121,7 @@ const Footer = () => {
 
         {/* Footer Bottom Wrapper */}
         <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
-          <p className="text-[#666666] text-sm">DESIGN & DEVELOPED BY AZIZ KHALDI</p>
+          <p className="text-[#666666] text-sm">DESIGN & DEVELOPED BY ABHINAV RAJ</p>
           <div className="flex gap-8">
             <a href="#" className="text-[#666666] uppercase text-xs tracking-widest hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="text-[#666666] uppercase text-xs tracking-widest hover:text-white transition-colors">Terms of Use</a>

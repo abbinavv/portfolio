@@ -17,7 +17,7 @@ const ProfileStats: React.FC = () => {
           <div className="relative aspect-[4/5] md:aspect-[16/10] lg:aspect-[16/9] w-full overflow-hidden">
             <Image
               src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/me-sitting_37df8593-2.png"
-              alt="Aziz Khaldi - Full Stack Developer Sitting"
+              alt="Abhinav Raj - Full Stack Developer Sitting"
               fill
               priority
               className="object-cover grayscale transition-all duration-700 ease-in-out group-hover:grayscale-0"

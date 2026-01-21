@@ -23,7 +23,7 @@ const AboutIntro = () => {
           <span className="inline-block mb-[0.2rem]">I&apos;m</span>
         </span>
         <span className="inline-block overflow-hidden mr-3">
-          <span className="inline-block mb-[0.2rem]">Aziz</span>
+          <span className="inline-block mb-[0.2rem]">Abhinav</span>
         </span>
         <span className="inline-block overflow-hidden mr-3">
           <span className="inline-block mb-[0.2rem]">——</span>
