@@ -1,9 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Linkedin, Github } from 'lucide-react';
 
+const roles = ['Full-stack Developer', 'iOS Developer'];
+
 const HeroSection: React.FC = () => {
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-[#E6E6E6]">
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -62,9 +73,9 @@ const HeroSection: React.FC = () => {
         <p className="font-display text-base md:text-lg lg:text-xl mb-2">
           Hi! i&rsquo;m Aziz
         </p>
-        <h1 className="font-display text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] xl:text-[6.5rem] leading-[1.1] tracking-tight">
-          Full-stack Developer
-        </h1>
+<h1 className="font-display text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] xl:text-[6.5rem] leading-[1.1] tracking-tight transition-opacity duration-500">
+            {roles[currentRoleIndex]}
+          </h1>
         <h1 className="font-display text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] xl:text-[6.5rem] leading-[1.1] tracking-tight">
           UI & UX Designer.
         </h1>
