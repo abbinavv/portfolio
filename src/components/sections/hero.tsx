@@ -1,12 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Linkedin, Github } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const roles = ['Full-stack Developer', 'iOS Developer'];
 
 const HeroSection: React.FC = () => {
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const scale = useTransform(scrollYProgress, [0, 1], [0.7, 1]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -16,17 +25,25 @@ const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-white">
+    <section 
+      ref={containerRef}
+      className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-white"
+    >
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] object-contain"
+        <motion.div
+          style={{ scale }}
+          className="w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] flex items-center justify-center"
         >
-          <source src="https://azizkhaldi.com/_next/static/media/glassyObj.3c74f580.mp4" type="video/mp4" />
-        </video>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-contain"
+          >
+            <source src="https://azizkhaldi.com/_next/static/media/glassyObj.3c74f580.mp4" type="video/mp4" />
+          </video>
+        </motion.div>
       </div>
 
       <div className="z-50 flex-col flex h-[70vh] px-5 lg:px-9 py-10 items-center left-0 top-1/2 -translate-y-1/2 absolute justify-between font-display">
