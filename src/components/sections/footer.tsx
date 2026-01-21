@@ -107,16 +107,12 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="lg:col-span-2">
-            <div className="mb-12">
-              <h3 className="text-[#666666] uppercase text-xs tracking-widest mb-6">Local Time</h3>
-              <p className="text-white text-xl">11:09 AM UTC+2</p>
+<div className="lg:col-span-2">
+              <div>
+                <h3 className="text-[#666666] uppercase text-xs tracking-widest mb-6">Version</h3>
+                <p className="text-white text-xl">2026 © Edition</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-[#666666] uppercase text-xs tracking-widest mb-6">Version</h3>
-              <p className="text-white text-xl">2026 © Edition</p>
-            </div>
-          </div>
         </div>
 
         {/* Footer Bottom Wrapper */}
