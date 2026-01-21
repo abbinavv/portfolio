@@ -82,26 +82,26 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content: Centered Typography */}
-      <div className="flex lg:pl-0 pl-0 lg:-mt-[11rem] -mt-[30rem] flex-col lg:flex-row justify-center items-center">
-        <div className="flex flex-col item lg:px-0 px-[1rem] text-black z-50 justify-center">
-          <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
-              <h1 className="font-display text-[1.2rem] xs:text-[1.5rem] sm:text-[1.6rem] md:text-[1.65rem] lg:text-[1.6rem] text-center mb-1 lg:-mb-1">
+        {/* Main Content: Centered Typography - positioned at center of glassy video */}
+        <div className="absolute inset-0 flex items-center justify-center z-20">
+          <div className="flex flex-col items-center text-black">
+            <div className="words overflow-hidden">
+              <h1 className="font-display text-[1.2rem] xs:text-[1.5rem] sm:text-[1.6rem] md:text-[1.65rem] lg:text-[1.6rem] text-center mb-2">
                 Hi! i&rsquo;m Abhinav
               </h1>
             </div>
-            <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
-                <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-2 text-center transition-opacity duration-500">
-                  {roles[currentRoleIndex]}
-                </h1>
+            <div className="words overflow-hidden">
+              <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] text-center transition-opacity duration-500 leading-tight">
+                {roles[currentRoleIndex]}
+              </h1>
             </div>
-          <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
-            <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-1 text-center">
-              UI &amp; UX Designer.
-            </h1>
+            <div className="words overflow-hidden">
+              <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] text-center leading-tight">
+                UI &amp; UX Designer.
+              </h1>
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Right Name Tag: Vertical Label */}
       <div className="item absolute hidden font-display -mt-10 lg:block -rotate-90 top-[40%] -right-[6.5%] transform -translate-y-1/2 tracking-widest opacity-80 select-none">
