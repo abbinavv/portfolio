@@ -164,6 +164,10 @@
 }
 
 @layer utilities {
+  .writing-vertical-rl {
+    writing-mode: vertical-rl;
+  }
+
   .text-hero {
     font-size: clamp(3.5rem, 10vw, 6rem);
     line-height: 0.9;
