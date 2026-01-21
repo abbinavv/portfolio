@@ -16,14 +16,14 @@ const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-[#E6E6E6]">
+    <section className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-white">
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="w-[50vw] h-[50vw] max-w-[700px] max-h-[700px] object-contain"
+          className="w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] object-contain"
         >
           <source src="https://azizkhaldi.com/_next/static/media/glassyObj.3c74f580.mp4" type="video/mp4" />
         </video>
