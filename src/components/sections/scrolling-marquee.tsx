@@ -14,7 +14,7 @@ import Image from "next/image";
 export default function ScrollingMarquee() {
   const flowerAsset = "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/green-flower_7426aff1-1.avif";
   
-  const textContent = "FULL-STACK DEVELOPER UI & UX DESIGNER.";
+  const textContent = "FULL-STACK DEVELOPER  •  iOS DEVELOPER  •  UI & UX DESIGNER";
 
   // Content block to repeat for seamless infinite loop
   const MarqueeItem = () => (
