@@ -1,12 +1,12 @@
 import React from 'react';
-import { Layers, Monitor, Disc, Network } from 'lucide-react';
+import { Smartphone, Monitor, Disc, Network } from 'lucide-react';
 
 const services = [
   {
     index: '01',
-    title: 'Full Stack Development',
-    description: 'Building scalable and high-performance web applications using Next.js, React, Node.js, and TypeScript, with robust backend architectures, secure RESTful APIs, and clean code practices.',
-    icon: <Layers className="w-8 h-8 text-[#111111]" />,
+    title: 'iOS Developer',
+    description: 'Building high-performance native iOS applications using Swift and SwiftUI. Creating seamless user experiences with elegant UI and robust architectures across the Apple ecosystem.',
+    icon: <Smartphone className="w-8 h-8 text-[#111111]" />,
   },
   {
     index: '02',

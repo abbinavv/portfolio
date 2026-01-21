@@ -80,9 +80,9 @@ const HeroSection: React.FC = () => {
             </h1>
           </div>
           <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
-            <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-2 text-center">
-              Full-stack Developer
-            </h1>
+              <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-2 text-center">
+                iOS Developer
+              </h1>
           </div>
           <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
             <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-1 text-center">
