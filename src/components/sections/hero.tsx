@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { Linkedin, Github } from 'lucide-react';
 
 /**
@@ -6,7 +8,18 @@ import { Linkedin, Github } from 'lucide-react';
  * Clones the hero section with centered typography, social links,
  * vertical name tag, and a 3D background video.
  */
+const roles = ['Full Stack Developer', 'iOS Developer'];
+
 const HeroSection: React.FC = () => {
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-[#E6E6E6]">
       {/* 3D Glassy Object Background/Overlay */}
@@ -75,15 +88,15 @@ const HeroSection: React.FC = () => {
       <div className="flex lg:pl-0 pl-0 lg:-mt-[11rem] -mt-[30rem] flex-col lg:flex-row justify-center items-center">
         <div className="flex flex-col item lg:px-0 px-[1rem] text-black z-50 justify-center">
           <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
-            <h1 className="font-display text-[1.2rem] xs:text-[1.5rem] sm:text-[1.6rem] md:text-[1.65rem] lg:text-[1.6rem] text-center mb-1 lg:-mb-1">
-              Hi! i&rsquo;m Aziz
-            </h1>
-          </div>
-          <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
-              <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-2 text-center">
-                iOS Developer
+              <h1 className="font-display text-[1.2rem] xs:text-[1.5rem] sm:text-[1.6rem] md:text-[1.65rem] lg:text-[1.6rem] text-center mb-1 lg:-mb-1">
+                Hi! i&rsquo;m Abhinav
               </h1>
-          </div>
+            </div>
+            <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
+                <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-2 text-center transition-opacity duration-500">
+                  {roles[currentRoleIndex]}
+                </h1>
+            </div>
           <div className="words overflow-hidden lg:leading-[4rem] xl:leading-[5.6rem] md:leading-[3.2rem] leading-[2.5rem]">
             <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] pb-1 text-center">
               UI &amp; UX Designer.
