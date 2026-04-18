@@ -108,17 +108,18 @@
     --radius: 2rem;
   }
 
-  html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
 
-  body {
-    font-family: var(--font-body);
-    background-color: var(--background);
-    color: var(--foreground);
-    overflow-x: hidden;
-  }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--background);
+      color: var(--foreground);
+      overflow-x: hidden;
+    }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -149,6 +150,10 @@
 
   .font-body {
     font-family: var(--font-body);
+  }
+
+  .font-cabinetGrotesk {
+    font-family: "Cabinet Grotesk", sans-serif;
   }
 
   /* Custom Scrollbar */
