@@ -3,258 +3,290 @@
 import React, { useEffect, useRef, useState } from "react";
 import Navigation from "@/components/sections/navigation";
 import Footer from "@/components/sections/footer";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-/* ─── Animated word-by-word reveal ─── */
-function AnimatedParagraph({ text, className = "" }: { text: string; className?: string }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const [visible, setVisible] = useState(false);
+/* ─── Marquee Hero ─── */
+function MarqueeHero() {
+  const flowerSrc =
+    "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/green-flower_7426aff1-1.avif";
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  const words = text.split(" ");
+  const Item = () => (
+    <div className="flex items-center gap-10 whitespace-nowrap shrink-0">
+      <Image src={flowerSrc} alt="green flower" width={128} height={128} className="h-16 w-16 lg:h-[8rem] lg:w-[8rem]" />
+      FULL-STACK DEVELOPER&nbsp;&nbsp;UI &amp; UX DESIGNER.
+      <svg className="h-16 w-16 lg:h-20 lg:w-20 shrink-0" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="45" stroke="black" strokeWidth="3" />
+        <circle cx="50" cy="50" r="20" fill="black" />
+      </svg>
+      <Image src={flowerSrc} alt="green flower" width={128} height={128} className="h-16 w-16 lg:h-[8rem] lg:w-[8rem]" />
+    </div>
+  );
 
   return (
-    <p ref={ref} className={className}>
-      {words.map((word, i) => (
-        <span
-          key={i}
-          className="inline-block mr-[0.28em]"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(24px)",
-            transition: `opacity 0.55s ease ${i * 30}ms, transform 0.55s ease ${i * 30}ms`,
-          }}
-        >
-          {word}
-        </span>
-      ))}
-    </p>
+    <section className="relative w-full bg-[#E6E6E6] overflow-hidden py-10 lg:py-16 font-display">
+      <div
+        className="flex items-center font-semibold text-[5rem] lg:text-[8rem] leading-none text-black"
+        style={{ animation: "marquee 20s linear infinite", width: "max-content", display: "flex" }}
+      >
+        <div className="flex items-center gap-10 px-10"><Item /><Item /><Item /></div>
+        <div className="flex items-center gap-10 px-10" aria-hidden><Item /><Item /><Item /></div>
+      </div>
+      <style jsx global>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+    </section>
   );
 }
 
-/* ─── Scroll-triggered fade-in ─── */
-function FadeIn({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
+/* ─── Scroll-scale image ─── */
+function ScaleImage() {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [scale, setScale] = useState(0.6);
+  const [br, setBr] = useState(48);
+  const [opacity, setOpacity] = useState(0.5);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold: 0.08 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    const handle = () => {
+      rafRef.current = requestAnimationFrame(() => {
+        if (!ref.current) return;
+        const rect = ref.current.getBoundingClientRect();
+        const wh = window.innerHeight;
+        const start = wh * 0.9, end = wh * 0.2;
+        let p = rect.top <= start && rect.top >= end ? (start - rect.top) / (start - end) : rect.top < end ? 1 : 0;
+        p = Math.max(0, Math.min(1, p));
+        const e = 1 - Math.pow(1 - p, 3);
+        setScale(0.6 + e * 0.4);
+        setBr(48 - e * 40);
+        setOpacity(0.5 + e * 0.5);
+      });
+    };
+    window.addEventListener("scroll", handle, { passive: true });
+    handle();
+    return () => { window.removeEventListener("scroll", handle); cancelAnimationFrame(rafRef.current); };
   }, []);
 
   return (
     <div
       ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(36px)",
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
-      }}
+      className="relative w-full overflow-hidden bg-[#D1D1D1]/20 will-change-transform"
+      style={{ transform: `scale(${scale})`, borderRadius: `${br}px`, opacity, transition: "transform 0.1s ease-out, border-radius 0.1s ease-out, opacity 0.1s ease-out" }}
     >
+      <div className="relative aspect-[16/9] w-full overflow-hidden group">
+        <Image
+          src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/me-sitting_37df8593-2.png"
+          alt="Abhinav Raj - Full Stack Developer"
+          fill
+          priority
+          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+          sizes="1280px"
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ─── Word-by-word animated text ─── */
+function AnimatedWords({ text, className = "" }: { text: string; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={className}>
+      {text.split(" ").map((word, i) => (
+        <span
+          key={i}
+          className="inline-block mr-[0.3em]"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(1.2rem)",
+            transition: `opacity 0.55s ease ${i * 28}ms, transform 0.55s ease ${i * 28}ms`,
+          }}
+        >
+          {word}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/* ─── FadeIn ─── */
+function FadeIn({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.06 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={className} style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(2rem)", transition: `opacity 0.65s ease ${delay}ms, transform 0.65s ease ${delay}ms` }}>
       {children}
     </div>
   );
 }
 
-/* ─── DATA ─── */
-const pillars = [
+/* ─── DATA matching original site ─── */
+const services = [
   {
     num: "01",
-    title: "Full-Stack Architecture",
-    desc: "Building scalable, type-safe systems with Next.js, Node.js, PostgreSQL/MongoDB, and tRPC. End-to-end from schema design to deployed product.",
+    title: "Full-Stack Development",
+    desc: "End-to-end web applications with Next.js, Node.js, TypeScript, PostgreSQL, and tRPC. From architecture to deployment.",
   },
   {
     num: "02",
     title: "iOS Development",
-    desc: "Native iOS apps with Swift & SwiftUI. Clean architectures, elegant UI, and seamless Apple-ecosystem integrations built for performance.",
+    desc: "Native iOS apps built with Swift & SwiftUI. Clean architecture, polished UI, and seamless Apple ecosystem integration.",
   },
   {
     num: "03",
-    title: "UI/UX & Interactive Design",
-    desc: "Pixel-perfect interfaces with Figma, Tailwind CSS, and Framer Motion. Intuitive design systems and immersive interactive experiences.",
+    title: "UI & UX Design",
+    desc: "Pixel-perfect interfaces designed in Figma. Design systems, interactive prototypes, and immersive web experiences.",
   },
 ];
 
-const metrics = [
-  { value: "4+", label: "Years of Experience" },
-  { value: "30+", label: "Projects Completed" },
-  { value: "10+", label: "Production Applications" },
-  { value: "100%", label: "Type-Safe Architecture" },
-];
-
-const techGroups = [
-  {
-    label: "Languages & Frameworks",
-    items: ["TypeScript", "Swift", "React", "Next.js", "Node.js", "SwiftUI"],
-  },
-  {
-    label: "Mobile & 3D",
-    items: ["iOS SDK", "Xcode", "Three.js", "React Three Fiber", "GSAP"],
-  },
-  {
-    label: "Databases & State",
-    items: ["PostgreSQL", "MongoDB", "Prisma", "Redis", "Zustand"],
-  },
-  {
-    label: "DevOps & Cloud",
-    items: ["Docker", "Vercel", "GCP", "CI/CD", "Nginx"],
-  },
+const techStack = [
+  { category: "Frontend", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Three.js", "GSAP"] },
+  { category: "Backend", items: ["Node.js", "tRPC", "Prisma", "PostgreSQL", "MongoDB", "Redis"] },
+  { category: "Mobile", items: ["Swift", "SwiftUI", "iOS SDK", "Xcode", "CoreData"] },
+  { category: "DevOps", items: ["Vercel", "Docker", "GCP", "GitHub Actions", "Nginx"] },
 ];
 
 const experience = [
-  {
-    period: "2025 — Present",
-    role: "Full Stack Developer",
-    company: "Freelance / Self-Made Products",
-    tag: "Part-time",
-  },
-  {
-    period: "2024 — 2025",
-    role: "iOS Developer",
-    company: "Independent Projects",
-    tag: "Full-time",
-  },
-  {
-    period: "2023 — 2024",
-    role: "UI/UX Designer",
-    company: "Digital Agency",
-    tag: "Full-time",
-  },
+  { year: "2025 — Present", role: "Full Stack Developer", company: "Freelance & Self-Built Products", type: "Part-time" },
+  { year: "2024 — 2025",    role: "iOS Developer",         company: "Independent Projects",          type: "Full-time" },
+  { year: "2023 — 2024",    role: "UI/UX Designer",        company: "Digital Agency",                type: "Full-time" },
 ];
 
 export default function AboutPage() {
   return (
-    <div className="bg-[#111111] text-white min-h-screen font-cabinetGrotesk overflow-x-hidden">
+    <div className="bg-[#E6E6E6] text-black min-h-screen font-display overflow-x-hidden">
       <Navigation />
 
-      {/* ── Hero ── */}
-      <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-20 max-w-[1400px] mx-auto">
-        <FadeIn>
-          <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6 font-medium">
-            About Me
-          </p>
-        </FadeIn>
-        <FadeIn delay={80}>
-          <h1 className="text-[clamp(3.5rem,9vw,8rem)] font-medium leading-[0.92] tracking-tight">
-            Full-Stack Developer
-            <br />
-            <span className="text-white/25">iOS Developer.</span>
-          </h1>
-        </FadeIn>
+      {/* ── Marquee Hero ── */}
+      <MarqueeHero />
+
+      {/* ── Profile Image ── */}
+      <section className="w-full bg-white pt-16 lg:pt-24 pb-0">
+        <div className="container max-w-[1280px] mx-auto px-6 lg:px-12">
+          <ScaleImage />
+        </div>
       </section>
 
-      {/* ── Divider ── */}
-      <div className="w-full h-px bg-white/10" />
+      {/* ── Stats ── */}
+      <section className="bg-white border-t border-black/10">
+        <div className="container max-w-[1280px] mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-black/10">
+            {[
+              { val: "4+",   label: "Years of Experience" },
+              { val: "30+",  label: "Projects Completed" },
+              { val: "10+",  label: "Production Apps" },
+              { val: "100%", label: "Type-Safe Code" },
+            ].map((stat, i) => (
+              <FadeIn key={i} delay={i * 80} className="px-6 lg:px-10 py-14 flex flex-col gap-3">
+                <span className="text-[clamp(3rem,7vw,5.5rem)] font-medium leading-none tracking-tighter">
+                  {stat.val}
+                </span>
+                <span className="text-[0.65rem] tracking-[0.22em] uppercase text-black/40 font-medium">
+                  {stat.label}
+                </span>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* ── Bio paragraph ── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto">
-        <div className="max-w-4xl">
-          <AnimatedParagraph
-            text="I'm Abhinav — a Full Stack Developer & iOS Developer focused on building fast, scalable, and beautiful digital products that take ideas from first concept to polished reality."
-            className="text-[clamp(1.5rem,3vw,2.6rem)] font-medium leading-[1.3] text-white"
+      {/* ── About / Bio ── */}
+      <section className="bg-[#111111] relative py-28 lg:py-40 px-6 overflow-hidden">
+        {/* curved top */}
+        <div className="absolute left-1/2 -top-10 -translate-x-1/2 w-[110%] h-16 pointer-events-none">
+          <div className="absolute inset-0 rounded-[50%] bg-[#111111]" />
+        </div>
+
+        <div className="container max-w-[1280px] mx-auto">
+          <AnimatedWords
+            text="I'm Abhinav — a Full Stack, iOS Developer & UI/UX Designer crafting fast, scalable, and immersive digital experiences that merge creativity with engineering precision."
+            className="text-white text-[clamp(1.8rem,3.8vw,3.2rem)] font-medium leading-[1.25] max-w-5xl"
           />
+          <div className="mt-12 lg:mt-16">
+            <AnimatedWords
+              text="I specialize in SaaS platforms, AI-driven products, and interactive 3D web experiences using Next.js, Node.js, Swift, and Three.js."
+              className="text-white/50 text-[clamp(1rem,2vw,1.4rem)] font-light leading-relaxed max-w-3xl"
+            />
+          </div>
+
+          <FadeIn delay={200} className="mt-16">
+            <Link href="/works" className="group inline-flex items-center">
+              <div className="relative inline-flex items-center gap-4 bg-[#E6E6E6] text-black font-medium rounded-full overflow-hidden text-base px-9 py-4 group-hover:bg-white transition-colors duration-500">
+                <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                <span className="relative z-10">See My Work</span>
+              </div>
+              <div className="w-14 h-14 ml-[-1px] bg-[#E6E6E6] rounded-full flex items-center justify-center overflow-hidden relative group-hover:bg-white transition-colors duration-500">
+                <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                <ArrowUpRight className="w-5 h-5 text-black relative z-10 group-hover:-translate-y-8 group-hover:translate-x-8 transition-transform duration-500" />
+                <ArrowUpRight className="w-5 h-5 text-black absolute z-10 translate-y-8 -translate-x-8 group-hover:translate-y-0 group-hover:translate-x-0 transition-transform duration-500" />
+              </div>
+            </Link>
+          </FadeIn>
         </div>
       </section>
 
-      {/* ── Metrics ── */}
-      <section className="border-t border-b border-white/10">
-        <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4">
-          {metrics.map((m, i) => (
-            <FadeIn key={i} delay={i * 80}>
-              <div
-                className={`px-8 py-14 flex flex-col gap-3 ${
-                  i !== metrics.length - 1 ? "border-r border-white/10" : ""
-                }`}
-              >
-                <span className="text-[clamp(2.8rem,6vw,4.5rem)] font-medium leading-none tracking-tighter text-white">
-                  {m.value}
-                </span>
-                <span className="text-xs tracking-[0.18em] uppercase text-white/30 font-medium">
-                  {m.label}
-                </span>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Core Pillars ── */}
-      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto">
-        <FadeIn>
-          <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-16 font-medium">
-            Core Pillars
-          </p>
-        </FadeIn>
-        <div className="grid grid-cols-1 md:grid-cols-3 border border-white/10">
-          {pillars.map((p, i) => (
-            <FadeIn key={i} delay={i * 100}>
-              <div
-                className={`p-8 lg:p-12 flex flex-col gap-6 min-h-[300px] ${
-                  i !== pillars.length - 1
-                    ? "border-b md:border-b-0 md:border-r border-white/10"
-                    : ""
-                }`}
-              >
-                <span className="text-xs text-white/20 font-medium tracking-widest">
-                  {p.num}
-                </span>
-                <h3 className="text-2xl font-medium leading-tight">{p.title}</h3>
-                <p className="text-white/40 text-sm leading-relaxed mt-auto">{p.desc}</p>
-              </div>
-            </FadeIn>
-          ))}
+      {/* ── Services / Pillars ── */}
+      <section className="bg-[#E6E6E6] py-28 lg:py-36 px-6">
+        <div className="container max-w-[1280px] mx-auto">
+          <FadeIn>
+            <p className="text-[0.65rem] tracking-[0.3em] uppercase text-black/40 font-medium mb-14">
+              What I Do
+            </p>
+          </FadeIn>
+          <div className="grid grid-cols-1 md:grid-cols-3 border border-black/10">
+            {services.map((s, i) => (
+              <FadeIn key={i} delay={i * 100}>
+                <div className={`p-8 lg:p-12 flex flex-col gap-6 min-h-[280px] ${i < services.length - 1 ? "border-b md:border-b-0 md:border-r border-black/10" : ""}`}>
+                  <span className="text-[0.65rem] text-black/25 tracking-widest font-medium">{s.num}</span>
+                  <h3 className="text-2xl font-medium leading-tight">{s.title}</h3>
+                  <p className="text-black/40 text-sm leading-relaxed mt-auto">{s.desc}</p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── Experience ── */}
-      <section className="border-t border-white/10 py-28 px-6 md:px-12 lg:px-20">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="bg-white border-t border-black/10 py-28 lg:py-36 px-6">
+        <div className="container max-w-[1280px] mx-auto">
           <FadeIn>
-            <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-16 font-medium">
+            <p className="text-[0.65rem] tracking-[0.3em] uppercase text-black/40 font-medium mb-14">
               Experience
             </p>
           </FadeIn>
-          <div className="flex flex-col divide-y divide-white/10">
+          <div className="flex flex-col divide-y divide-black/10">
             {experience.map((exp, i) => (
               <FadeIn key={i} delay={i * 80}>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-8 group cursor-default">
-                  <span className="text-white/30 text-sm font-mono w-40 shrink-0">
-                    {exp.period}
-                  </span>
+                  <span className="text-black/30 text-sm font-mono shrink-0 w-44">{exp.year}</span>
                   <div className="flex-1">
-                    <p className="text-white text-2xl font-medium group-hover:translate-x-2 transition-transform duration-300">
+                    <p className="text-2xl font-medium group-hover:translate-x-2 transition-transform duration-300">
                       {exp.role}
                     </p>
-                    <p className="text-white/30 text-sm mt-1">{exp.company}</p>
+                    <p className="text-black/40 text-sm mt-1">{exp.company}</p>
                   </div>
-                  <span className="text-[#D9FF32] text-xs tracking-[0.2em] uppercase font-medium">
-                    {exp.tag}
+                  <span className="text-[#111111] bg-[#D9FF32] text-[0.6rem] tracking-[0.2em] uppercase font-semibold px-3 py-1 rounded-full self-start sm:self-center">
+                    {exp.type}
                   </span>
                 </div>
               </FadeIn>
@@ -263,57 +295,51 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Technology Arsenal ── */}
-      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto">
-        <FadeIn>
-          <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-16 font-medium">
-            Technology Arsenal
-          </p>
-        </FadeIn>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-white/10">
-          {techGroups.map((group, i) => (
-            <FadeIn key={i} delay={i * 80}>
-              <div
-                className={`p-8 flex flex-col gap-6 ${
-                  i !== techGroups.length - 1
-                    ? "border-b lg:border-b-0 lg:border-r border-white/10"
-                    : ""
-                }`}
-              >
-                <p className="text-xs tracking-[0.2em] uppercase text-white/30 font-medium">
-                  {group.label}
-                </p>
-                <ul className="flex flex-col gap-3">
-                  {group.items.map((item, j) => (
-                    <li
-                      key={j}
-                      className="text-white text-base font-medium flex items-center gap-3"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#D9FF32] shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeIn>
-          ))}
+      {/* ── Tech Stack ── */}
+      <section className="bg-[#E6E6E6] border-t border-black/10 py-28 lg:py-36 px-6">
+        <div className="container max-w-[1280px] mx-auto">
+          <FadeIn>
+            <p className="text-[0.65rem] tracking-[0.3em] uppercase text-black/40 font-medium mb-14">
+              Technology Stack
+            </p>
+          </FadeIn>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-black/10">
+            {techStack.map((group, i) => (
+              <FadeIn key={i} delay={i * 80}>
+                <div className={`p-8 lg:p-10 flex flex-col gap-5 ${i < techStack.length - 1 ? "border-b lg:border-b-0 lg:border-r border-black/10" : ""}`}>
+                  <p className="text-[0.62rem] tracking-[0.25em] uppercase text-black/40 font-medium">{group.category}</p>
+                  <ul className="flex flex-col gap-3">
+                    {group.items.map((item, j) => (
+                      <li key={j} className="flex items-center gap-3 text-base font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-black/70 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto text-center">
+      <section className="bg-[#111111] py-32 lg:py-44 px-6 text-center">
         <FadeIn>
-          <h2 className="text-[clamp(2.5rem,6vw,5.5rem)] font-medium leading-[0.95] mb-12 tracking-tight">
-            Ready to build something
+          <h2 className="text-white text-[clamp(3rem,7vw,6.5rem)] font-medium leading-[0.95] tracking-tight mb-14">
+            Have a project in mind?
             <br />
-            <span className="text-white/25">exceptional?</span>
+            <span className="text-white/20">Let's build it.</span>
           </h2>
-          <Link href="mailto:abhinav@example.com" className="group inline-flex items-center">
-            <div className="inline-flex items-center gap-4 bg-white text-black font-medium rounded-full px-10 py-5 text-lg group-hover:bg-[#D9FF32] transition-colors duration-500">
-              Get in touch
+          <Link href="mailto:contact@example.com" className="group inline-flex items-center">
+            <div className="relative inline-flex items-center gap-4 bg-[#E6E6E6] text-black font-medium rounded-full overflow-hidden text-lg px-10 py-5 group-hover:bg-[#D9FF32] transition-colors duration-500">
+              <div className="absolute inset-0 bg-[#D9FF32] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <span className="relative z-10">Get in touch</span>
             </div>
-            <div className="w-16 h-16 ml-[-1px] bg-white rounded-full flex items-center justify-center group-hover:bg-[#D9FF32] transition-colors duration-500">
-              <ArrowUpRight className="w-6 h-6 text-black" />
+            <div className="w-16 h-16 ml-[-1px] bg-[#E6E6E6] rounded-full flex items-center justify-center overflow-hidden relative group-hover:bg-[#D9FF32] transition-colors duration-500">
+              <div className="absolute inset-0 bg-[#D9FF32] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <ArrowUpRight className="w-6 h-6 text-black relative z-10 group-hover:-translate-y-8 group-hover:translate-x-8 transition-transform duration-500" />
+              <ArrowUpRight className="w-6 h-6 text-black absolute z-10 translate-y-8 -translate-x-8 group-hover:translate-y-0 group-hover:translate-x-0 transition-transform duration-500" />
             </div>
           </Link>
         </FadeIn>
