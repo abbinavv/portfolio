@@ -2,173 +2,456 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Navigation from "@/components/sections/navigation";
-import Footer from "@/components/sections/footer";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
-/* ─── Marquee Hero ─── */
-function MarqueeHero() {
-  const flowerSrc =
-    "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/green-flower_7426aff1-1.avif";
+/* ─── Word-by-word scroll reveal (original site effect) ─── */
+function ScrollRevealText({
+  text,
+  className = "",
+}: {
+  text: string;
+  className?: string;
+}) {
+  const containerRef = useRef<HTMLParagraphElement>(null);
+  const [progress, setProgress] = useState(0);
 
-  const Item = () => (
-    <div className="flex items-center gap-10 whitespace-nowrap shrink-0">
-      <Image src={flowerSrc} alt="green flower" width={128} height={128} className="h-16 w-16 lg:h-[8rem] lg:w-[8rem]" />
-      FULL-STACK DEVELOPER&nbsp;&nbsp;UI &amp; UX DESIGNER.
-      <svg className="h-16 w-16 lg:h-20 lg:w-20 shrink-0" viewBox="0 0 100 100" fill="none">
-        <circle cx="50" cy="50" r="45" stroke="black" strokeWidth="3" />
-        <circle cx="50" cy="50" r="20" fill="black" />
-      </svg>
-      <Image src={flowerSrc} alt="green flower" width={128} height={128} className="h-16 w-16 lg:h-[8rem] lg:w-[8rem]" />
-    </div>
-  );
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      const rect = el.getBoundingClientRect();
+      const windowH = window.innerHeight;
+      const start = windowH * 0.85;
+      const end = windowH * 0.15;
+      const ratio = (start - rect.top) / (start - end);
+      setProgress(Math.min(1, Math.max(0, ratio)));
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const words = text.split(" ");
+  const total = words.length;
 
   return (
-    <section className="relative w-full bg-[#E6E6E6] overflow-hidden py-10 lg:py-16 font-display">
-      <div
-        className="flex items-center font-semibold text-[5rem] lg:text-[8rem] leading-none text-black"
-        style={{ animation: "marquee 20s linear infinite", width: "max-content", display: "flex" }}
-      >
-        <div className="flex items-center gap-10 px-10"><Item /><Item /><Item /></div>
-        <div className="flex items-center gap-10 px-10" aria-hidden><Item /><Item /><Item /></div>
-      </div>
-      <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
-    </section>
+    <p ref={containerRef} className={className}>
+      {words.map((word, i) => {
+        const wordProgress = Math.min(
+          1,
+          Math.max(0, (progress - i / total) / (1 / total))
+        );
+        return (
+          <span
+            key={i}
+            style={{
+              color: `rgba(0,0,0,${0.15 + wordProgress * 0.65})`,
+              transition: "color 0.1s ease",
+            }}
+          >
+            {word}
+            {i < words.length - 1 ? " " : ""}
+          </span>
+        );
+      })}
+    </p>
   );
 }
 
-/* ─── Scroll-scale image ─── */
-function ScaleImage() {
+/* ─── FadeIn utility ─── */
+function FadeIn({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.6);
-  const [br, setBr] = useState(48);
-  const [opacity, setOpacity] = useState(0.5);
-  const rafRef = useRef<number>(0);
-
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const handle = () => {
-      rafRef.current = requestAnimationFrame(() => {
-        if (!ref.current) return;
-        const rect = ref.current.getBoundingClientRect();
-        const wh = window.innerHeight;
-        const start = wh * 0.9, end = wh * 0.2;
-        let p = rect.top <= start && rect.top >= end ? (start - rect.top) / (start - end) : rect.top < end ? 1 : 0;
-        p = Math.max(0, Math.min(1, p));
-        const e = 1 - Math.pow(1 - p, 3);
-        setScale(0.6 + e * 0.4);
-        setBr(48 - e * 40);
-        setOpacity(0.5 + e * 0.5);
-      });
-    };
-    window.addEventListener("scroll", handle, { passive: true });
-    handle();
-    return () => { window.removeEventListener("scroll", handle); cancelAnimationFrame(rafRef.current); };
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
-
   return (
     <div
       ref={ref}
-      className="relative w-full overflow-hidden bg-[#D1D1D1]/20 will-change-transform"
-      style={{ transform: `scale(${scale})`, borderRadius: `${br}px`, opacity, transition: "transform 0.1s ease-out, border-radius 0.1s ease-out, opacity 0.1s ease-out" }}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(2rem)",
+        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+      }}
     >
-      <div className="relative aspect-[16/9] w-full overflow-hidden group">
-        <Image
-          src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/me-sitting_37df8593-2.png"
-          alt="Abhinav Raj - Full Stack Developer"
-          fill
-          priority
-          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-          sizes="1280px"
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ─── Word-by-word animated text ─── */
-function AnimatedWords({ text, className = "" }: { text: string; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.1 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return (
-    <div ref={ref} className={className}>
-      {text.split(" ").map((word, i) => (
-        <span
-          key={i}
-          className="inline-block mr-[0.3em]"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(1.2rem)",
-            transition: `opacity 0.55s ease ${i * 28}ms, transform 0.55s ease ${i * 28}ms`,
-          }}
-        >
-          {word}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-/* ─── FadeIn ─── */
-function FadeIn({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.06 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return (
-    <div ref={ref} className={className} style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(2rem)", transition: `opacity 0.65s ease ${delay}ms, transform 0.65s ease ${delay}ms` }}>
       {children}
     </div>
   );
 }
 
-/* ─── DATA matching original site ─── */
-const services = [
+/* ─── Scrolling Marquee ─── */
+function Marquee() {
+  const flowerSrc =
+    "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/green-flower_7426aff1-1.avif";
+
+  const Item = () => (
+    <span className="inline-flex items-center gap-8 whitespace-nowrap shrink-0">
+      <Image
+        src={flowerSrc}
+        alt=""
+        width={80}
+        height={80}
+        className="h-16 w-16 lg:h-24 lg:w-24 object-contain inline-block"
+      />
+      <span>FULL-STACK DEVELOPER&nbsp;&nbsp;&amp;&nbsp;&nbsp;iOS DEVELOPER.</span>
+    </span>
+  );
+
+  return (
+    <div className="w-full overflow-hidden bg-[#E6E6E6] py-6">
+      <div
+        className="flex items-center font-bold text-[3.5rem] lg:text-[6.5rem] leading-none text-black"
+        style={{
+          animation: "marquee-about 22s linear infinite",
+          width: "max-content",
+        }}
+      >
+        <div className="flex items-center gap-12 px-12">
+          <Item />
+          <Item />
+          <Item />
+        </div>
+        <div className="flex items-center gap-12 px-12" aria-hidden>
+          <Item />
+          <Item />
+          <Item />
+        </div>
+      </div>
+      <style jsx global>{`
+        @keyframes marquee-about {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ─── Sticky scroll two-column section ─── */
+function StickyScrollSection() {
+  return (
+    <section className="grid grid-cols-1 lg:grid-cols-2 bg-[#E6E6E6]">
+      {/* Left: scrolling text */}
+      <div className="px-8 lg:px-16 py-20 lg:py-28 flex flex-col gap-16 justify-start">
+        <ScrollRevealText
+          text="I'm a Full-Stack Developer who bridges the gap between cutting-edge technology and exceptional user experience. With proven experience building AI-powered SaaS platforms, 3D virtual tour systems, and enterprise-grade applications, I specialize in solving complex technical challenges while delivering intuitive, visually stunning interfaces."
+          className="text-base lg:text-lg leading-relaxed font-medium"
+        />
+        <ScrollRevealText
+          text="My approach combines strategic architecture with hands-on development — whether it's implementing Retrieval-Augmented Generation (RAG) systems, optimizing WebGL rendering for 3D experiences, or architecting type-safe monorepo setups with tRPC. I've worked across diverse industries from PropTech to FinTech, consistently delivering production-ready solutions that scale."
+          className="text-base lg:text-lg leading-relaxed font-medium"
+        />
+        <ScrollRevealText
+          text="What sets me apart is my ability to work across the entire stack: designing systems in Node.js, building dynamic React frontends, integrating AI capabilities, and deploying Dockerized microservices with CI/CD pipelines. I don't just write code — I architect solutions that drive measurable business outcomes."
+          className="text-base lg:text-lg leading-relaxed font-medium"
+        />
+      </div>
+
+      {/* Right: sticky portrait */}
+      <div className="relative hidden lg:block">
+        <div className="sticky top-0 h-screen">
+          <Image
+            src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/me-sitting_37df8593-2.png"
+            alt="Abhinav Raj"
+            fill
+            className="object-cover object-top grayscale"
+            sizes="50vw"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Footer ─── */
+function AboutFooter() {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const update = () => {
+      setTime(
+        new Date().toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "Asia/Kolkata",
+        }) + " IST"
+      );
+    };
+    update();
+    const id = setInterval(update, 60000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <footer className="w-full font-display overflow-hidden">
+      {/* Crossed ribbon marquee */}
+      <div className="relative h-[280px] lg:h-[360px] flex items-center justify-center overflow-hidden bg-[#E6E6E6]">
+        {[
+          { deg: -5, dir: 1 },
+          { deg: 5, dir: -1 },
+        ].map((band, bi) => (
+          <div
+            key={bi}
+            className="absolute w-[160%] h-[56px] lg:h-[72px] bg-[#111111] flex items-center overflow-hidden"
+            style={{
+              transform: `rotate(${band.deg}deg)`,
+              zIndex: 10 - bi * 5,
+            }}
+          >
+            <div
+              className="flex whitespace-nowrap items-center"
+              style={{
+                animation: `marquee-band-${bi} 28s linear infinite`,
+                width: "max-content",
+                transform: band.dir === -1 ? "translateX(-50%)" : undefined,
+              }}
+            >
+              {[0, 1, 2, 3, 4].map((i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-6 px-6 text-white text-base lg:text-xl font-medium tracking-tight"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-5 h-5 shrink-0"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      fill="none"
+                    />
+                    {[...Array(12)].map((_, k) => {
+                      const angle = (k * 30 * Math.PI) / 180;
+                      const x1 = 12 + 7 * Math.cos(angle);
+                      const y1 = 12 + 7 * Math.sin(angle);
+                      const x2 = 12 + 10 * Math.cos(angle);
+                      const y2 = 12 + 10 * Math.sin(angle);
+                      return (
+                        <line
+                          key={k}
+                          x1={x1}
+                          y1={y1}
+                          x2={x2}
+                          y2={y2}
+                          stroke="white"
+                          strokeWidth="1"
+                        />
+                      );
+                    })}
+                  </svg>
+                  {bi === 0
+                    ? i % 3 === 0
+                      ? "Driven by Passion, Built with Code"
+                      : i % 3 === 1
+                      ? "Custom Web Experiences"
+                      : "Innovative Self-Made Creations"
+                    : i % 3 === 0
+                    ? "Handcrafted Digital Solutions"
+                    : i % 3 === 1
+                    ? "Tailored Web Development for You"
+                    : "Driven by Passion, Built with Code"}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+        <style jsx global>{`
+          @keyframes marquee-band-0 {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          @keyframes marquee-band-1 {
+            0% {
+              transform: translateX(-50%);
+            }
+            100% {
+              transform: translateX(0);
+            }
+          }
+        `}</style>
+      </div>
+
+      {/* Dark footer body */}
+      <div className="bg-[#111111] pt-16 pb-10 px-8 lg:px-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16 max-w-5xl">
+          <div>
+            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-6">
+              Links
+            </p>
+            <ul className="flex flex-col gap-3">
+              {["Home", "Work", "About", "Contact"].map((l) => (
+                <li key={l}>
+                  <Link
+                    href={l === "Home" ? "/" : `/${l.toLowerCase()}`}
+                    className="text-white text-lg hover:text-[#D9FF32] transition-colors duration-300"
+                  >
+                    {l}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-6">
+              Socials
+            </p>
+            <ul className="flex flex-col gap-3">
+              {[
+                { label: "Email", href: "mailto:abhinav@example.com" },
+                { label: "LinkedIn", href: "https://linkedin.com" },
+                { label: "Github", href: "https://github.com" },
+              ].map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white text-lg hover:text-[#D9FF32] transition-colors duration-300"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-6">
+              Local Time
+            </p>
+            <p className="text-white text-lg">{time}</p>
+          </div>
+          <div>
+            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-6">
+              Version
+            </p>
+            <p className="text-white text-lg">2026 © Edition</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3 mb-16">
+          <a
+            href="mailto:abhinav@example.com"
+            className="inline-flex items-center justify-center border border-white/20 rounded-full px-7 py-3 text-white text-sm hover:border-white/60 transition-colors duration-300"
+          >
+            abhinav@example.com
+          </a>
+        </div>
+
+        <div className="relative flex items-end justify-center overflow-hidden mt-8">
+          <span
+            className="text-white font-bold leading-none tracking-tighter select-none text-[20vw]"
+            style={{ lineHeight: 0.85 }}
+          >
+            ABHINAV
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ─── DATA ─── */
+const competencies = [
   {
     num: "01",
-    title: "Full-Stack Development",
-    desc: "End-to-end web applications with Next.js, Node.js, TypeScript, PostgreSQL, and tRPC. From architecture to deployment.",
+    title: "Full-Stack Architecture",
+    desc: "I architect end-to-end solutions using modern tech stacks — from Node.js backends with PostgreSQL/MongoDB to React and Next.js frontends. Whether building multi-tenant SaaS platforms, real-time dashboards with WebSockets, or RESTful APIs with tRPC, I ensure type-safe, scalable architecture that supports rapid growth and seamless deployment.",
   },
   {
     num: "02",
     title: "iOS Development",
-    desc: "Native iOS apps built with Swift & SwiftUI. Clean architecture, polished UI, and seamless Apple ecosystem integration.",
+    desc: "I build high-performance native iOS apps using Swift and SwiftUI. From intuitive UI components to complex data flows with Combine and async/await, I deliver polished App Store-ready experiences. I integrate REST APIs, push notifications, Core Data, and third-party SDKs with clean MVVM architecture.",
   },
   {
     num: "03",
-    title: "UI & UX Design",
-    desc: "Pixel-perfect interfaces designed in Figma. Design systems, interactive prototypes, and immersive web experiences.",
+    title: "UI/UX Design",
+    desc: "I create immersive interfaces with deep attention to motion, typography, and interaction. From Figma prototypes to production-ready Tailwind components, I bridge design and engineering to deliver experiences that are both visually stunning and functionally excellent across web and mobile.",
+  },
+];
+
+const impactStats = [
+  {
+    val: "4+",
+    title: "Years of Experience",
+    desc: "Consistently delivering high-quality production software across web and mobile",
+  },
+  {
+    val: "30+",
+    title: "Projects Shipped",
+    desc: "Successfully deployed and maintained across various industries",
+  },
+  {
+    val: "10+",
+    title: "iOS Apps",
+    desc: "Native Swift/SwiftUI apps built and submitted to the App Store",
+  },
+  {
+    val: "100%",
+    title: "Type-Safe Architecture",
+    desc: "End-to-end type safety with TypeScript, tRPC, and modern tooling",
   },
 ];
 
 const techStack = [
-  { category: "Frontend", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Three.js", "GSAP"] },
-  { category: "Backend", items: ["Node.js", "tRPC", "Prisma", "PostgreSQL", "MongoDB", "Redis"] },
-  { category: "Mobile", items: ["Swift", "SwiftUI", "iOS SDK", "Xcode", "CoreData"] },
-  { category: "DevOps", items: ["Vercel", "Docker", "GCP", "GitHub Actions", "Nginx"] },
-];
-
-const experience = [
-  { year: "2025 — Present", role: "Full Stack Developer", company: "Freelance & Self-Built Products", type: "Part-time" },
-  { year: "2024 — 2025",    role: "iOS Developer",         company: "Independent Projects",          type: "Full-time" },
-  { year: "2023 — 2024",    role: "UI/UX Designer",        company: "Digital Agency",                type: "Full-time" },
+  {
+    category: "Languages & Frameworks",
+    items: ["Swift", "SwiftUI", "TypeScript", "React", "Next.js", "Node.js"],
+  },
+  {
+    category: "iOS & Mobile",
+    items: ["UIKit", "Combine", "Core Data", "WidgetKit", "CloudKit", "TestFlight"],
+  },
+  {
+    category: "Backend & APIs",
+    items: ["Express.js", "tRPC", "REST", "GraphQL", "Firebase", "Supabase"],
+  },
+  {
+    category: "Databases & State",
+    items: ["PostgreSQL", "MongoDB", "Prisma", "Redis", "React Query", "Zustand"],
+  },
+  {
+    category: "DevOps & Cloud",
+    items: ["Docker", "CI/CD", "Vercel", "AWS", "Nginx"],
+  },
+  {
+    category: "UI & Design",
+    items: ["Tailwind CSS", "Figma", "Framer Motion", "ShadCN UI", "GSAP"],
+  },
 ];
 
 export default function AboutPage() {
@@ -176,176 +459,140 @@ export default function AboutPage() {
     <div className="bg-[#E6E6E6] text-black min-h-screen font-display overflow-x-hidden">
       <Navigation />
 
-      {/* ── Marquee Hero ── */}
-      <MarqueeHero />
-
-      {/* ── Profile Image ── */}
-      <section className="w-full bg-white pt-16 lg:pt-24 pb-0">
-        <div className="container max-w-[1280px] mx-auto px-6 lg:px-12">
-          <ScaleImage />
-        </div>
-      </section>
-
-      {/* ── Stats ── */}
-      <section className="bg-white border-t border-black/10">
-        <div className="container max-w-[1280px] mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-black/10">
-            {[
-              { val: "4+",   label: "Years of Experience" },
-              { val: "30+",  label: "Projects Completed" },
-              { val: "10+",  label: "Production Apps" },
-              { val: "100%", label: "Type-Safe Code" },
-            ].map((stat, i) => (
-              <FadeIn key={i} delay={i * 80} className="px-6 lg:px-10 py-14 flex flex-col gap-3">
-                <span className="text-[clamp(3rem,7vw,5.5rem)] font-medium leading-none tracking-tighter">
-                  {stat.val}
-                </span>
-                <span className="text-[0.65rem] tracking-[0.22em] uppercase text-black/40 font-medium">
-                  {stat.label}
-                </span>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── About / Bio ── */}
-      <section className="bg-[#111111] relative py-28 lg:py-40 px-6 overflow-hidden">
-        {/* curved top */}
-        <div className="absolute left-1/2 -top-10 -translate-x-1/2 w-[110%] h-16 pointer-events-none">
-          <div className="absolute inset-0 rounded-[50%] bg-[#111111]" />
-        </div>
-
-        <div className="container max-w-[1280px] mx-auto">
-          <AnimatedWords
-            text="I'm Abhinav — a Full Stack, iOS Developer & UI/UX Designer crafting fast, scalable, and immersive digital experiences that merge creativity with engineering precision."
-            className="text-white text-[clamp(1.8rem,3.8vw,3.2rem)] font-medium leading-[1.25] max-w-5xl"
-          />
-          <div className="mt-12 lg:mt-16">
-            <AnimatedWords
-              text="I specialize in SaaS platforms, AI-driven products, and interactive 3D web experiences using Next.js, Node.js, Swift, and Three.js."
-              className="text-white/50 text-[clamp(1rem,2vw,1.4rem)] font-light leading-relaxed max-w-3xl"
-            />
-          </div>
-
-          <FadeIn delay={200} className="mt-16">
-            <Link href="/works" className="group inline-flex items-center">
-              <div className="relative inline-flex items-center gap-4 bg-[#E6E6E6] text-black font-medium rounded-full overflow-hidden text-base px-9 py-4 group-hover:bg-white transition-colors duration-500">
-                <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                <span className="relative z-10">See My Work</span>
-              </div>
-              <div className="w-14 h-14 ml-[-1px] bg-[#E6E6E6] rounded-full flex items-center justify-center overflow-hidden relative group-hover:bg-white transition-colors duration-500">
-                <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                <ArrowUpRight className="w-5 h-5 text-black relative z-10 group-hover:-translate-y-8 group-hover:translate-x-8 transition-transform duration-500" />
-                <ArrowUpRight className="w-5 h-5 text-black absolute z-10 translate-y-8 -translate-x-8 group-hover:translate-y-0 group-hover:translate-x-0 transition-transform duration-500" />
-              </div>
-            </Link>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* ── Services / Pillars ── */}
-      <section className="bg-[#E6E6E6] py-28 lg:py-36 px-6">
-        <div className="container max-w-[1280px] mx-auto">
-          <FadeIn>
-            <p className="text-[0.65rem] tracking-[0.3em] uppercase text-black/40 font-medium mb-14">
-              What I Do
-            </p>
-          </FadeIn>
-          <div className="grid grid-cols-1 md:grid-cols-3 border border-black/10">
-            {services.map((s, i) => (
-              <FadeIn key={i} delay={i * 100}>
-                <div className={`p-8 lg:p-12 flex flex-col gap-6 min-h-[280px] ${i < services.length - 1 ? "border-b md:border-b-0 md:border-r border-black/10" : ""}`}>
-                  <span className="text-[0.65rem] text-black/25 tracking-widest font-medium">{s.num}</span>
-                  <h3 className="text-2xl font-medium leading-tight">{s.title}</h3>
-                  <p className="text-black/40 text-sm leading-relaxed mt-auto">{s.desc}</p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Experience ── */}
-      <section className="bg-white border-t border-black/10 py-28 lg:py-36 px-6">
-        <div className="container max-w-[1280px] mx-auto">
-          <FadeIn>
-            <p className="text-[0.65rem] tracking-[0.3em] uppercase text-black/40 font-medium mb-14">
-              Experience
-            </p>
-          </FadeIn>
-          <div className="flex flex-col divide-y divide-black/10">
-            {experience.map((exp, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-8 group cursor-default">
-                  <span className="text-black/30 text-sm font-mono shrink-0 w-44">{exp.year}</span>
-                  <div className="flex-1">
-                    <p className="text-2xl font-medium group-hover:translate-x-2 transition-transform duration-300">
-                      {exp.role}
-                    </p>
-                    <p className="text-black/40 text-sm mt-1">{exp.company}</p>
-                  </div>
-                  <span className="text-[#111111] bg-[#D9FF32] text-[0.6rem] tracking-[0.2em] uppercase font-semibold px-3 py-1 rounded-full self-start sm:self-center">
-                    {exp.type}
-                  </span>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Tech Stack ── */}
-      <section className="bg-[#E6E6E6] border-t border-black/10 py-28 lg:py-36 px-6">
-        <div className="container max-w-[1280px] mx-auto">
-          <FadeIn>
-            <p className="text-[0.65rem] tracking-[0.3em] uppercase text-black/40 font-medium mb-14">
-              Technology Stack
-            </p>
-          </FadeIn>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-black/10">
-            {techStack.map((group, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div className={`p-8 lg:p-10 flex flex-col gap-5 ${i < techStack.length - 1 ? "border-b lg:border-b-0 lg:border-r border-black/10" : ""}`}>
-                  <p className="text-[0.62rem] tracking-[0.25em] uppercase text-black/40 font-medium">{group.category}</p>
-                  <ul className="flex flex-col gap-3">
-                    {group.items.map((item, j) => (
-                      <li key={j} className="flex items-center gap-3 text-base font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-black/70 shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="bg-[#111111] py-32 lg:py-44 px-6 text-center">
+      {/* ── Hero: "About Me" heading + bio text ── */}
+      <section className="px-8 lg:px-16 pt-16 lg:pt-24 pb-12 max-w-[820px]">
         <FadeIn>
-          <h2 className="text-white text-[clamp(3rem,7vw,6.5rem)] font-medium leading-[0.95] tracking-tight mb-14">
-            Have a project in mind?
-            <br />
-            <span className="text-white/20">Let's build it.</span>
-          </h2>
-          <Link href="mailto:contact@example.com" className="group inline-flex items-center">
-            <div className="relative inline-flex items-center gap-4 bg-[#E6E6E6] text-black font-medium rounded-full overflow-hidden text-lg px-10 py-5 group-hover:bg-[#D9FF32] transition-colors duration-500">
-              <div className="absolute inset-0 bg-[#D9FF32] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              <span className="relative z-10">Get in touch</span>
-            </div>
-            <div className="w-16 h-16 ml-[-1px] bg-[#E6E6E6] rounded-full flex items-center justify-center overflow-hidden relative group-hover:bg-[#D9FF32] transition-colors duration-500">
-              <div className="absolute inset-0 bg-[#D9FF32] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              <ArrowUpRight className="w-6 h-6 text-black relative z-10 group-hover:-translate-y-8 group-hover:translate-x-8 transition-transform duration-500" />
-              <ArrowUpRight className="w-6 h-6 text-black absolute z-10 translate-y-8 -translate-x-8 group-hover:translate-y-0 group-hover:translate-x-0 transition-transform duration-500" />
-            </div>
-          </Link>
+          <h1 className="text-[5rem] lg:text-[8rem] font-medium leading-[0.9] tracking-tight mb-10">
+            About Me
+          </h1>
+        </FadeIn>
+        <FadeIn delay={80}>
+          <p className="text-base lg:text-lg leading-relaxed text-black/70 max-w-[640px]">
+            I&apos;m a Full-Stack &amp; iOS Developer who enjoys building things
+            that genuinely make life easier for users and businesses. Most of my
+            work sits at the intersection of mobile, web, and thoughtful UI/UX.
+            I like taking ideas from the first concept all the way to a polished
+            product — whether that means shipping a SwiftUI app or architecting
+            a scalable backend. My goal is always the same: create fast,
+            beautiful, and meaningful tools that people actually enjoy using.
+          </p>
         </FadeIn>
       </section>
 
-      <Footer />
+      {/* ── Marquee ── */}
+      <Marquee />
+
+      {/* ── Sticky scroll: text left, portrait right ── */}
+      <StickyScrollSection />
+
+      {/* ── Core Competencies ── */}
+      <section className="bg-[#E6E6E6] px-8 lg:px-16 py-20 lg:py-28">
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-black/10">
+          {competencies.map((c, i) => (
+            <FadeIn key={i} delay={i * 100}>
+              <div
+                className={`pt-8 pb-10 pr-10 ${
+                  i < competencies.length - 1
+                    ? "border-b md:border-b-0 md:border-r border-black/10"
+                    : ""
+                } ${i > 0 ? "md:pl-10" : ""}`}
+              >
+                <p className="text-xs text-black/30 tracking-widest font-medium mb-6">
+                  {c.num}
+                </p>
+                <h3 className="text-2xl font-semibold mb-5 leading-tight">
+                  {c.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-black/50">{c.desc}</p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Proven Impact ── */}
+      <section className="bg-[#E6E6E6] px-8 lg:px-16 pb-24">
+        <FadeIn className="text-center mb-12">
+          <h2 className="text-3xl lg:text-4xl font-semibold mb-3">
+            Proven Impact
+          </h2>
+          <p className="text-black/40 text-base">
+            Throughout my career, I&apos;ve delivered measurable results that
+            matter
+          </p>
+        </FadeIn>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {impactStats.map((s, i) => (
+            <FadeIn key={i} delay={i * 80}>
+              <div className="bg-[#111111] rounded-2xl p-8 flex flex-col gap-4 h-full">
+                <span className="text-[4.5rem] lg:text-[5rem] font-bold text-white leading-none tracking-tighter">
+                  {s.val}
+                </span>
+                <p className="text-white font-semibold text-lg leading-tight">
+                  {s.title}
+                </p>
+                <p className="text-white/40 text-sm leading-relaxed">{s.desc}</p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Technology Arsenal ── */}
+      <section className="bg-[#E6E6E6] px-8 lg:px-16 pb-24">
+        <FadeIn className="text-center mb-14">
+          <h2 className="text-3xl lg:text-4xl font-semibold mb-3">
+            Technology Arsenal
+          </h2>
+          <p className="text-black/40 text-base">
+            A comprehensive toolkit for building modern, scalable applications
+          </p>
+        </FadeIn>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12">
+          {techStack.map((group, i) => (
+            <FadeIn key={i} delay={i * 60}>
+              <div>
+                <h4 className="text-xl font-semibold mb-5">{group.category}</h4>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((item) => (
+                    <span
+                      key={item}
+                      className="border border-black/15 rounded-full px-4 py-1.5 text-sm font-medium bg-transparent hover:bg-black hover:text-white transition-colors duration-200 cursor-default"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA Box ── */}
+      <section className="px-8 lg:px-16 pb-24">
+        <FadeIn>
+          <div className="bg-[#111111] rounded-3xl px-8 lg:px-20 py-16 lg:py-20 text-center">
+            <h2 className="text-white text-3xl lg:text-5xl font-semibold mb-6 leading-tight">
+              Ready to Build Something Exceptional?
+            </h2>
+            <p className="text-white/50 text-base lg:text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+              Whether you need a native iOS app, a high-performance web
+              application, or end-to-end product design, I bring the technical
+              expertise and creative vision to make it happen. Let&apos;s turn
+              your ideas into production-ready solutions.
+            </p>
+            <Link
+              href="mailto:abhinav@example.com"
+              className="inline-flex items-center gap-2 bg-white text-black font-medium rounded-full px-8 py-4 text-base hover:bg-[#D9FF32] transition-colors duration-300"
+            >
+              Get in Touch
+            </Link>
+          </div>
+        </FadeIn>
+      </section>
+
+      <AboutFooter />
     </div>
   );
 }
