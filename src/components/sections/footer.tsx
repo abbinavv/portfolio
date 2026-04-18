@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 /* Starburst icon matching original */
 const Starburst = () => (
-  <svg viewBox="0 0 32 32" className="w-6 h-6 lg:w-8 lg:h-8 fill-white shrink-0">
+  <svg viewBox="0 0 32 32" className="w-5 h-5 lg:w-7 lg:h-7 shrink-0">
     {[...Array(16)].map((_, i) => {
       const angle = (i * 22.5 * Math.PI) / 180;
       const inner = i % 2 === 0 ? 6 : 10;
@@ -33,13 +33,13 @@ const Ribbon = ({
   const animName = reverse ? 'footer-marquee-rev' : 'footer-marquee-fwd';
   return (
     <div
-      className="absolute w-[170%] h-[56px] lg:h-[76px] bg-[#111111] flex items-center overflow-hidden"
+      className="absolute w-[170%] h-[52px] lg:h-[68px] bg-[#111111] flex items-center overflow-hidden"
       style={{ transform: `rotate(${deg}deg)`, zIndex: reverse ? 5 : 10 }}
     >
       <div
-        className="flex items-center whitespace-nowrap gap-6"
+        className="flex items-center whitespace-nowrap gap-8"
         style={{
-          animation: `${animName} 30s linear infinite`,
+          animation: `${animName} 28s linear infinite`,
           width: 'max-content',
           transform: reverse ? 'translateX(-50%)' : undefined,
         }}
@@ -48,7 +48,7 @@ const Ribbon = ({
           phrases.map((phrase, pi) => (
             <React.Fragment key={`${rep}-${pi}`}>
               <Starburst />
-              <span className="text-white text-base lg:text-xl font-medium tracking-tight pr-2">
+              <span className="text-white text-sm lg:text-lg font-medium tracking-tight">
                 {phrase}
               </span>
             </React.Fragment>
@@ -59,18 +59,27 @@ const Ribbon = ({
   );
 };
 
+const FooterLink = ({ href, label }: { href: string; label: string }) => (
+  <div className="overflow-hidden">
+    <a href={href}>
+      <h1 className="text-[0.95rem] cursor-pointer hover:text-gray-400 text-gray-300 leading-6">
+        {label}
+      </h1>
+    </a>
+  </div>
+);
+
 const Footer = () => {
   const [time, setTime] = useState('');
 
   useEffect(() => {
     const update = () => {
-      setTime(
-        new Date().toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-          timeZone: 'Africa/Algiers',
-        }) + ' UTC+1'
-      );
+      const t = new Date().toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Africa/Algiers',
+      });
+      setTime(`${t} UTC+2`);
     };
     update();
     const id = setInterval(update, 60000);
@@ -80,7 +89,7 @@ const Footer = () => {
   return (
     <footer className="w-full font-display overflow-hidden">
       {/* Crossed ribbon marquee */}
-      <div className="relative h-[320px] lg:h-[420px] flex items-center justify-center overflow-hidden bg-[#E6E6E6]">
+      <div className="relative h-[280px] lg:h-[380px] flex items-center justify-center overflow-hidden bg-[#E6E6E6]">
         <Ribbon
           deg={-5}
           reverse={false}
@@ -89,88 +98,103 @@ const Footer = () => {
         <Ribbon
           deg={5}
           reverse={true}
-          phrases={['Handcrafted Digital Solutions', 'Tailored Web Development for You', 'Driven by Passion, Built with Code']}
+          phrases={['Handcrafted Digital Solutions', 'Tailored Web Development', 'Unique Code Creations']}
         />
       </div>
 
-      {/* Dark footer body with curved top */}
-      <div className="relative bg-[#111111] -mt-[80px] pt-[100px] lg:pt-[130px] px-8 lg:px-16 pb-0 overflow-hidden rounded-t-[60px] lg:rounded-t-[120px]">
-        {/* Curved light cap */}
-        <div className="absolute top-0 left-0 right-0 h-[80px] bg-[#E6E6E6] curved-section-bottom pointer-events-none" />
+      {/* Dark footer body — matches original bg-sec = #1e1e1e */}
+      <div
+        className="relative font-cabinetGrotesk h-[80vh] lg:h-[100vh] z-30 flex flex-col justify-between text-white pt-[2rem] lg:pt-24 px-[1rem] lg:px-[2rem]"
+        style={{ backgroundColor: '#1e1e1e' }}
+      >
+        {/* Top row: links/socials/time/version LEFT, pills RIGHT */}
+        <div className="flex flex-col lg:flex-row justify-between w-full">
+          {/* Left: columns */}
+          <div className="flex justify-between">
+            <div className="text-lg z-50 flex flex-wrap lg:gap-10 gap-6">
+              {/* Links */}
+              <div className="flex flex-col gap-2">
+                <div className="overflow-hidden">
+                  <h1 className="opacity-50 text-sm">LINKS</h1>
+                </div>
+                <div className="flex gap-1 flex-col whitespace-nowrap leading-6">
+                  <FooterLink href="/" label="Home" />
+                  <FooterLink href="/works" label="Work" />
+                  <FooterLink href="/about-me" label="About" />
+                  <FooterLink href="mailto:contact@azizkhaldi.com" label="Contact" />
+                </div>
+              </div>
 
-        {/* Links + socials + time + version + contact pills */}
-        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-10 mb-12 pt-4">
-          {/* Links */}
-          <div>
-            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-5">Links</p>
-            <ul className="flex flex-col gap-3">
-              {[
-                { label: 'Home', href: '/' },
-                { label: 'Work', href: '/works' },
-                { label: 'About', href: '/about-me' },
-                { label: 'Contact', href: 'mailto:contact@azizkhaldi.com' },
-              ].map((l) => (
-                <li key={l.label}>
-                  <Link href={l.href} className="text-white text-lg hover:text-[#D9FF32] transition-colors duration-300">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+              {/* Socials */}
+              <div className="flex flex-col gap-2">
+                <div className="overflow-hidden">
+                  <h1 className="opacity-50 text-sm">SOCIALS</h1>
+                </div>
+                <div className="flex gap-1 flex-col whitespace-nowrap leading-6">
+                  <FooterLink href="mailto:contact@azizkhaldi.com" label="Email" />
+                  <FooterLink href="https://www.linkedin.com/in/aziz-khaldi-b28207261/" label="Linkdin" />
+                  <FooterLink href="https://wa.me/213779577865" label="Whatsapp" />
+                  <FooterLink href="https://github.com/AzizKhaldi01" label="Github" />
+                </div>
+              </div>
+
+              {/* Local Time */}
+              <div className="flex flex-col gap-2">
+                <div className="overflow-hidden">
+                  <h1 className="opacity-50 text-sm">LOCAL TIME</h1>
+                </div>
+                <div className="flex gap-1 flex-col whitespace-nowrap leading-6">
+                  <div className="overflow-hidden">
+                    <p className="text-[0.95rem]">{time}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Version */}
+              <div className="flex flex-col gap-2">
+                <div className="overflow-hidden">
+                  <h1 className="opacity-50 text-sm">VERSION</h1>
+                </div>
+                <div className="flex gap-1 flex-col whitespace-nowrap leading-6">
+                  <div className="overflow-hidden">
+                    <p className="text-[0.95rem]">2026 © Edition</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Socials */}
-          <div>
-            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-5">Socials</p>
-            <ul className="flex flex-col gap-3">
-              {[
-                { label: 'Email', href: 'mailto:contact@azizkhaldi.com' },
-                { label: 'Linkdin', href: 'https://www.linkedin.com/in/aziz-khaldi-b28207261/' },
-                { label: 'Whatsapp', href: 'https://wa.me/213779577865' },
-                { label: 'Github', href: 'https://github.com/AzizKhaldi01' },
-              ].map((s) => (
-                <li key={s.label}>
-                  <a href={s.href} target="_blank" rel="noopener noreferrer" className="text-white text-lg hover:text-[#D9FF32] transition-colors duration-300">
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Time */}
-          <div>
-            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-5">Local Time</p>
-            <p className="text-white text-lg">{time}</p>
-          </div>
-
-          {/* Version */}
-          <div>
-            <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-5">Version</p>
-            <p className="text-white text-lg">2026 © Edition</p>
+          {/* Right: contact pill buttons */}
+          <div className="lg:flex-row lg:w-fit w-full lg:px-0 px-[1rem] md:items-start items-center flex-col flex gap-5 pt-10">
+            <div className="w-full">
+              <a
+                href="https://wa.me/213779577865"
+                className="group relative overflow-hidden inline-flex lg:w-fit w-full items-center justify-center border border-white text-white cursor-pointer px-6 py-3 rounded-full hover:border-transparent transition-colors duration-300"
+              >
+                <span className="relative z-10 group-hover:text-[#1e1e1e] transition-colors duration-300">
+                  +213779577865
+                </span>
+                <span className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-full" />
+              </a>
+            </div>
+            <div className="w-full">
+              <a
+                href="mailto:contact@azizkhaldi.com"
+                className="group relative overflow-hidden inline-flex lg:w-fit w-full items-center justify-center border border-white text-white cursor-pointer px-6 py-3 rounded-full hover:border-transparent transition-colors duration-300"
+              >
+                <span className="relative z-10 group-hover:text-[#1e1e1e] transition-colors duration-300">
+                  contact@azizkhaldi.com
+                </span>
+                <span className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-full" />
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Contact pill buttons */}
-        <div className="relative z-10 flex flex-col sm:flex-row gap-3 mb-16 justify-end">
-          <a
-            href="tel:+213779577865"
-            className="inline-flex items-center justify-center border border-white/20 rounded-full px-7 py-3 text-white text-sm hover:border-[#D9FF32] hover:text-[#D9FF32] transition-colors duration-300"
-          >
-            +213779577865
-          </a>
-          <a
-            href="mailto:contact@azizkhaldi.com"
-            className="inline-flex items-center justify-center border border-white/20 rounded-full px-7 py-3 text-white text-sm hover:border-[#D9FF32] hover:text-[#D9FF32] transition-colors duration-300"
-          >
-            contact@azizkhaldi.com
-          </a>
-        </div>
-
-        {/* Robot + Giant AZIZ */}
-        <div className="relative z-10 flex flex-col items-center">
-          {/* Robot character placeholder */}
-          <div className="relative w-32 h-40 lg:w-44 lg:h-56 mb-0 z-10">
+        {/* Bottom: Robot + Giant AZIZ */}
+        <div className="flex flex-col items-center justify-center w-full relative">
+          {/* Robot */}
+          <div className="absolute xl:-top-[15em] lg:-top-[9em] xl:scale-90 lg:scale-[0.55] translate-x-1/2 right-1/2 lg:w-[450px] lg:h-[450px] w-[300px] h-[300px] hidden lg:block z-10">
             <Image
               src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/green-flower_7426aff1-1.avif"
               alt="robot"
@@ -180,13 +204,10 @@ const Footer = () => {
           </div>
 
           {/* Giant name */}
-          <div className="w-full overflow-hidden">
-            <p
-              className="text-white font-bold text-center leading-none tracking-tighter select-none"
-              style={{ fontSize: 'clamp(6rem, 22vw, 20rem)', lineHeight: 0.85 }}
-            >
-              AZIZ
-            </p>
+          <div
+            className="font-righteous lg:leading-[28rem] leading-[10rem] lg:text-[20rem] xl:text-[30rem] text-[8rem] flex flex-col text-center"
+          >
+            <h1 className="text-white">AZIZ</h1>
           </div>
         </div>
       </div>
@@ -199,10 +220,6 @@ const Footer = () => {
         @keyframes footer-marquee-rev {
           0%   { transform: translateX(-50%); }
           100% { transform: translateX(0); }
-        }
-        .curved-section-bottom {
-          border-bottom-left-radius: 50% 80px;
-          border-bottom-right-radius: 50% 80px;
         }
       `}</style>
     </footer>
