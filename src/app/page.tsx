@@ -7,6 +7,7 @@ import ScrollingMarquee from "@/components/sections/scrolling-marquee";
 import ProfileStats from "@/components/sections/profile-stats";
 import ServicesGrid from "@/components/sections/services-grid";
 import FeaturedProjects from "@/components/sections/featured-projects";
+import WorkExperienceTimeline from "@/components/sections/work-experience-timeline";
 import Footer from "@/components/sections/footer";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <ProfileStats />
       <ServicesGrid />
       <FeaturedProjects />
+      <WorkExperienceTimeline />
       <Footer />
     </main>
   );

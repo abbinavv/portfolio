@@ -40,9 +40,9 @@ const AnimatedWord = ({ children, index }: { children: React.ReactNode; index: n
 
 const AboutIntro = () => {
   const primaryWords = [
-    "I'm", "Abhinav", "——", "a", "Full", "Stack,", "iOS", "Developer", "&",
-    "UI/UX", "Designer", "crafting", "fast,", "scalable,", "and", "immersive",
-    "digital", "experiences", "that", "merge", "creativity", "with", "engineering", "precision."
+    "I'm", "Aziz", "–", "a", "Full", "Stack", "Developer", "crafting", "fast,",
+    "scalable,", "and", "immersive", "digital", "experiences", "that", "merge",
+    "creativity", "with", "engineering", "precision."
   ];
 
   const secondaryWords = [

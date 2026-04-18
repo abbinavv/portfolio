@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Linkedin, Github } from 'lucide-react';
 
 /**
@@ -8,17 +8,7 @@ import { Linkedin, Github } from 'lucide-react';
  * Clones the hero section with centered typography, social links,
  * vertical name tag, and a 3D background video.
  */
-const roles = ['Full Stack Developer', 'iOS Developer'];
-
 const HeroSection: React.FC = () => {
-  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section className="hero relative h-screen w-full flex items-center justify-center overflow-hidden z-20 bg-[#E6E6E6]">
@@ -87,12 +77,12 @@ const HeroSection: React.FC = () => {
           <div className="flex flex-col items-center text-black">
             <div className="words overflow-hidden">
               <h1 className="font-display text-[1.2rem] xs:text-[1.5rem] sm:text-[1.6rem] md:text-[1.65rem] lg:text-[1.6rem] text-center mb-2">
-                Hi! i&rsquo;m Abhinav
+                Hi! i&rsquo;m Aziz
               </h1>
             </div>
             <div className="words overflow-hidden">
-              <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] text-center transition-opacity duration-500 leading-tight">
-                {roles[currentRoleIndex]}
+              <h1 className="font-display text-[2.3rem] xs:text-[2.2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[5.4rem] 2xl:text-[6rem] text-center leading-tight">
+                Full-stack Developer
               </h1>
             </div>
             <div className="words overflow-hidden">
@@ -106,7 +96,7 @@ const HeroSection: React.FC = () => {
       {/* Right Name Tag: Vertical Label */}
       <div className="item absolute hidden font-display -mt-10 lg:block -rotate-90 top-[40%] -right-[6.5%] transform -translate-y-1/2 tracking-widest opacity-80 select-none">
         <span className="text-[0.8rem] leading-none whitespace-nowrap">
-          ABHINAV RAJ
+          AZIZ KHALDI
         </span>
       </div>
 
