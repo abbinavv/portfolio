@@ -6,63 +6,76 @@ import Footer from "@/components/sections/footer";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-/* ─── Animated word helper ─── */
-function AnimatedWord({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
+/* ─── Animated word-by-word reveal ─── */
+function AnimatedParagraph({ text, className = "" }: { text: string; className?: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            el.style.opacity = "1";
-            el.style.transform = "translateY(0)";
-          }, delay);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.1 }
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.15 }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [delay]);
+  }, []);
+
+  const words = text.split(" ");
 
   return (
-    <span
-      ref={ref}
-      className="inline-block mr-[0.3em]"
-      style={{ opacity: 0, transform: "translateY(20px)", transition: "opacity 0.6s ease, transform 0.6s ease" }}
-    >
-      {children}
-    </span>
+    <p ref={ref} className={className}>
+      {words.map((word, i) => (
+        <span
+          key={i}
+          className="inline-block mr-[0.28em]"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(24px)",
+            transition: `opacity 0.55s ease ${i * 30}ms, transform 0.55s ease ${i * 30}ms`,
+          }}
+        >
+          {word}
+        </span>
+      ))}
+    </p>
   );
 }
 
-/* ─── Fade-in section wrapper ─── */
-function FadeSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+/* ─── Scroll-triggered fade-in ─── */
+function FadeIn({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.style.opacity = "1";
-          el.style.transform = "translateY(0)";
-          obs.disconnect();
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold: 0.08 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+
   return (
     <div
       ref={ref}
       className={className}
-      style={{ opacity: 0, transform: "translateY(40px)", transition: "opacity 0.8s ease, transform 0.8s ease" }}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(36px)",
+        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+      }}
     >
       {children}
     </div>
@@ -84,15 +97,15 @@ const pillars = [
   {
     num: "03",
     title: "UI/UX & Interactive Design",
-    desc: "Pixel-perfect interfaces with Figma, Tailwind CSS, and Framer Motion. Intuitive design systems and immersive 3D web experiences with Three.js.",
+    desc: "Pixel-perfect interfaces with Figma, Tailwind CSS, and Framer Motion. Intuitive design systems and immersive interactive experiences.",
   },
 ];
 
 const metrics = [
-  { value: "4+", label: "Years of experience" },
-  { value: "30+", label: "Projects completed" },
-  { value: "100%", label: "Type-safe architecture" },
-  { value: "10+", label: "Production applications" },
+  { value: "4+", label: "Years of Experience" },
+  { value: "30+", label: "Projects Completed" },
+  { value: "10+", label: "Production Applications" },
+  { value: "100%", label: "Type-Safe Architecture" },
 ];
 
 const techGroups = [
@@ -115,146 +128,195 @@ const techGroups = [
 ];
 
 const experience = [
-  { period: "2025 – Present", role: "Full Stack Developer", company: "Freelance / Self-Made Products", type: "Part-time" },
-  { period: "2024 – 2025", role: "iOS Developer", company: "Independent Projects", type: "Full-time" },
-  { period: "2023 – 2024", role: "Frontend Developer", company: "Digital Agency", type: "Full-time" },
+  {
+    period: "2025 — Present",
+    role: "Full Stack Developer",
+    company: "Freelance / Self-Made Products",
+    tag: "Part-time",
+  },
+  {
+    period: "2024 — 2025",
+    role: "iOS Developer",
+    company: "Independent Projects",
+    tag: "Full-time",
+  },
+  {
+    period: "2023 — 2024",
+    role: "UI/UX Designer",
+    company: "Digital Agency",
+    tag: "Full-time",
+  },
 ];
 
 export default function AboutPage() {
-  const bioWords = [
-    "I'm", "Abhinav", "——", "a", "Full", "Stack", "Developer", "&", "iOS", "Developer",
-    "focused", "on", "building", "fast,", "scalable,", "and", "beautiful", "digital",
-    "products", "that", "take", "ideas", "from", "concept", "to", "polished", "reality.",
-  ];
-
   return (
-    <div className="bg-[#E6E6E6] min-h-screen font-display overflow-x-hidden">
+    <div className="bg-[#111111] text-white min-h-screen font-cabinetGrotesk overflow-x-hidden">
       <Navigation />
 
       {/* ── Hero ── */}
-      <section className="relative pt-32 pb-24 px-6 md:px-12 lg:px-20 max-w-[1280px] mx-auto">
-        <FadeSection>
-          <p className="text-xs tracking-[0.3em] uppercase text-black/40 mb-6">About Me</p>
-          <h1 className="text-[clamp(3rem,8vw,7rem)] font-medium leading-[0.95] tracking-tight mb-0">
-            Building things
+      <section className="relative px-6 md:px-12 lg:px-20 pt-28 pb-20 max-w-[1400px] mx-auto">
+        <FadeIn>
+          <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6 font-medium">
+            About Me
+          </p>
+        </FadeIn>
+        <FadeIn delay={80}>
+          <h1 className="text-[clamp(3.5rem,9vw,8rem)] font-medium leading-[0.92] tracking-tight">
+            Full-Stack Developer
             <br />
-            <span className="text-black/30">that matter.</span>
+            <span className="text-white/25">iOS Developer.</span>
           </h1>
-        </FadeSection>
+        </FadeIn>
       </section>
 
       {/* ── Divider ── */}
-      <div className="w-full h-px bg-black/10" />
+      <div className="w-full h-px bg-white/10" />
 
       {/* ── Bio paragraph ── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 max-w-[1280px] mx-auto">
+      <section className="py-24 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto">
         <div className="max-w-4xl">
-          <p className="text-[clamp(1.4rem,3vw,2.4rem)] font-medium leading-[1.3] text-[#111111]">
-            {bioWords.map((word, i) => (
-              <AnimatedWord key={i} delay={i * 35}>
-                {word}
-              </AnimatedWord>
-            ))}
-          </p>
+          <AnimatedParagraph
+            text="I'm Abhinav — a Full Stack Developer & iOS Developer focused on building fast, scalable, and beautiful digital products that take ideas from first concept to polished reality."
+            className="text-[clamp(1.5rem,3vw,2.6rem)] font-medium leading-[1.3] text-white"
+          />
         </div>
       </section>
 
       {/* ── Metrics ── */}
-      <section className="border-t border-b border-black/10">
-        <div className="max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-4">
+      <section className="border-t border-b border-white/10">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4">
           {metrics.map((m, i) => (
-            <FadeSection key={i}>
+            <FadeIn key={i} delay={i * 80}>
               <div
-                className={`px-8 py-14 flex flex-col gap-3 ${i !== metrics.length - 1 ? "border-r border-black/10" : ""}`}
+                className={`px-8 py-14 flex flex-col gap-3 ${
+                  i !== metrics.length - 1 ? "border-r border-white/10" : ""
+                }`}
               >
-                <span className="text-[clamp(3rem,7vw,5rem)] font-medium leading-none tracking-tighter">{m.value}</span>
-                <span className="text-xs tracking-[0.18em] uppercase text-black/40">{m.label}</span>
+                <span className="text-[clamp(2.8rem,6vw,4.5rem)] font-medium leading-none tracking-tighter text-white">
+                  {m.value}
+                </span>
+                <span className="text-xs tracking-[0.18em] uppercase text-white/30 font-medium">
+                  {m.label}
+                </span>
               </div>
-            </FadeSection>
+            </FadeIn>
           ))}
         </div>
       </section>
 
       {/* ── Core Pillars ── */}
-      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1280px] mx-auto">
-        <FadeSection>
-          <p className="text-xs tracking-[0.3em] uppercase text-black/40 mb-16">Core Pillars</p>
-        </FadeSection>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-black/10">
+      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto">
+        <FadeIn>
+          <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-16 font-medium">
+            Core Pillars
+          </p>
+        </FadeIn>
+        <div className="grid grid-cols-1 md:grid-cols-3 border border-white/10">
           {pillars.map((p, i) => (
-            <FadeSection key={i}>
-              <div className={`p-8 lg:p-12 flex flex-col gap-6 min-h-[280px] ${i !== pillars.length - 1 ? "border-b md:border-b-0 md:border-r border-black/10" : ""}`}>
-                <span className="text-xs text-black/30 font-medium">{p.num}</span>
+            <FadeIn key={i} delay={i * 100}>
+              <div
+                className={`p-8 lg:p-12 flex flex-col gap-6 min-h-[300px] ${
+                  i !== pillars.length - 1
+                    ? "border-b md:border-b-0 md:border-r border-white/10"
+                    : ""
+                }`}
+              >
+                <span className="text-xs text-white/20 font-medium tracking-widest">
+                  {p.num}
+                </span>
                 <h3 className="text-2xl font-medium leading-tight">{p.title}</h3>
-                <p className="text-[#666] text-sm leading-relaxed mt-auto">{p.desc}</p>
+                <p className="text-white/40 text-sm leading-relaxed mt-auto">{p.desc}</p>
               </div>
-            </FadeSection>
+            </FadeIn>
           ))}
         </div>
       </section>
 
       {/* ── Experience ── */}
-      <section className="bg-[#111111] py-28 px-6 md:px-12 lg:px-20">
-        <div className="max-w-[1280px] mx-auto">
-          <FadeSection>
-            <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-16">Experience</p>
-          </FadeSection>
+      <section className="border-t border-white/10 py-28 px-6 md:px-12 lg:px-20">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeIn>
+            <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-16 font-medium">
+              Experience
+            </p>
+          </FadeIn>
           <div className="flex flex-col divide-y divide-white/10">
             {experience.map((exp, i) => (
-              <FadeSection key={i}>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-8">
-                  <span className="text-white/30 text-sm font-mono">{exp.period}</span>
-                  <div className="flex-1 sm:text-center">
-                    <p className="text-white text-xl font-medium">{exp.role}</p>
-                    <p className="text-white/40 text-sm mt-1">{exp.company}</p>
+              <FadeIn key={i} delay={i * 80}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-8 group cursor-default">
+                  <span className="text-white/30 text-sm font-mono w-40 shrink-0">
+                    {exp.period}
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-white text-2xl font-medium group-hover:translate-x-2 transition-transform duration-300">
+                      {exp.role}
+                    </p>
+                    <p className="text-white/30 text-sm mt-1">{exp.company}</p>
                   </div>
-                  <span className="text-[#D9FF32] text-xs tracking-widest uppercase">{exp.type}</span>
+                  <span className="text-[#D9FF32] text-xs tracking-[0.2em] uppercase font-medium">
+                    {exp.tag}
+                  </span>
                 </div>
-              </FadeSection>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Tech Stack ── */}
-      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1280px] mx-auto">
-        <FadeSection>
-          <p className="text-xs tracking-[0.3em] uppercase text-black/40 mb-16">Technology Arsenal</p>
-        </FadeSection>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-black/10">
+      {/* ── Technology Arsenal ── */}
+      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto">
+        <FadeIn>
+          <p className="text-xs tracking-[0.3em] uppercase text-white/30 mb-16 font-medium">
+            Technology Arsenal
+          </p>
+        </FadeIn>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-white/10">
           {techGroups.map((group, i) => (
-            <FadeSection key={i}>
-              <div className={`p-8 flex flex-col gap-5 ${i !== techGroups.length - 1 ? "border-b lg:border-b-0 lg:border-r border-black/10" : ""}`}>
-                <p className="text-xs tracking-[0.2em] uppercase text-black/40">{group.label}</p>
+            <FadeIn key={i} delay={i * 80}>
+              <div
+                className={`p-8 flex flex-col gap-6 ${
+                  i !== techGroups.length - 1
+                    ? "border-b lg:border-b-0 lg:border-r border-white/10"
+                    : ""
+                }`}
+              >
+                <p className="text-xs tracking-[0.2em] uppercase text-white/30 font-medium">
+                  {group.label}
+                </p>
                 <ul className="flex flex-col gap-3">
                   {group.items.map((item, j) => (
-                    <li key={j} className="text-[#111111] text-base font-medium flex items-center gap-3">
+                    <li
+                      key={j}
+                      className="text-white text-base font-medium flex items-center gap-3"
+                    >
                       <span className="w-1.5 h-1.5 rounded-full bg-[#D9FF32] shrink-0" />
                       {item}
                     </li>
                   ))}
                 </ul>
               </div>
-            </FadeSection>
+            </FadeIn>
           ))}
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1280px] mx-auto text-center">
-        <FadeSection>
-          <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-medium leading-[0.95] mb-10 tracking-tight">
-            Ready to build something<br />exceptional?
+      <section className="py-28 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto text-center">
+        <FadeIn>
+          <h2 className="text-[clamp(2.5rem,6vw,5.5rem)] font-medium leading-[0.95] mb-12 tracking-tight">
+            Ready to build something
+            <br />
+            <span className="text-white/25">exceptional?</span>
           </h2>
           <Link href="mailto:abhinav@example.com" className="group inline-flex items-center">
-            <div className="inline-flex items-center justify-center gap-4 bg-[#111111] text-white font-medium rounded-full px-10 py-5 text-lg group-hover:bg-[#D9FF32] group-hover:text-black transition-colors duration-500">
+            <div className="inline-flex items-center gap-4 bg-white text-black font-medium rounded-full px-10 py-5 text-lg group-hover:bg-[#D9FF32] transition-colors duration-500">
               Get in touch
             </div>
-            <div className="w-16 h-16 ml-[-1px] bg-[#111111] rounded-full flex items-center justify-center group-hover:bg-[#D9FF32] transition-colors duration-500">
-              <ArrowUpRight className="w-6 h-6 text-white group-hover:text-black transition-colors duration-500" />
+            <div className="w-16 h-16 ml-[-1px] bg-white rounded-full flex items-center justify-center group-hover:bg-[#D9FF32] transition-colors duration-500">
+              <ArrowUpRight className="w-6 h-6 text-black" />
             </div>
           </Link>
-        </FadeSection>
+        </FadeIn>
       </section>
 
       <Footer />
