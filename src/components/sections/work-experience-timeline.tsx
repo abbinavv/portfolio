@@ -62,7 +62,7 @@ function TimelineEntry({
     if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -73,56 +73,56 @@ function TimelineEntry({
   return (
     <div
       ref={ref}
-      className="relative grid grid-cols-[1fr_auto_1fr] min-h-[60vh] lg:min-h-[75vh] items-center"
+      className="relative grid grid-cols-[1fr_48px_1fr] items-center py-20 lg:py-28"
     >
       {/* Left content */}
       <div
-        className={`pr-10 lg:pr-20 flex flex-col gap-4 ${isLeft ? 'items-end text-right' : ''}`}
+        className="pr-10 lg:pr-16 flex flex-col gap-3 items-end text-right"
         style={{
-          opacity: visible && isLeft ? 1 : isLeft ? 0 : undefined,
-          transform: visible && isLeft ? 'translateX(0)' : isLeft ? 'translateX(-2rem)' : undefined,
-          transition: `opacity 0.7s ease ${index * 60}ms, transform 0.7s ease ${index * 60}ms`,
+          opacity: isLeft ? (visible ? 1 : 0) : 1,
+          transform: isLeft ? (visible ? 'translateX(0)' : 'translateX(-40px)') : 'none',
+          visibility: isLeft ? 'visible' : 'hidden',
+          transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 80}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 80}ms`,
         }}
       >
         {isLeft && (
           <>
-            <h3 className="text-[3rem] sm:text-[4rem] lg:text-[5.5rem] font-bold text-white leading-none tracking-tight">
+            <span className="text-white/30 text-xs tracking-widest uppercase">{entry.period}</span>
+            <h3 className="text-[2.5rem] sm:text-[3.5rem] lg:text-[4.5rem] font-bold text-white leading-none tracking-tight">
               {entry.company}
             </h3>
-            <p className="text-white/40 text-lg lg:text-2xl font-light">{entry.role}</p>
-            <p className="text-white/25 text-sm lg:text-base leading-relaxed max-w-sm">{entry.desc}</p>
-            <p className="text-white/30 text-sm">{entry.period}</p>
+            <p className="text-white/50 text-base lg:text-lg font-light">{entry.role}</p>
+            <p className="text-white/25 text-sm leading-relaxed max-w-xs">{entry.desc}</p>
           </>
         )}
       </div>
 
-      {/* Center line + dot */}
-      <div className="flex flex-col items-center self-stretch">
-        <div className="w-[2px] flex-1 bg-[#D9FF32]" />
+      {/* Center dot only — line is a single absolute element behind all entries */}
+      <div className="flex items-center justify-center z-10">
         <div
-          className="w-3 h-3 rounded-full bg-black border-2 border-white/40 shrink-0 my-1"
-          style={{ boxShadow: '0 0 0 4px rgba(217,255,50,0.2)' }}
+          className="w-4 h-4 rounded-full bg-[#1a1a1a] border-2 border-[#D9FF32] shrink-0"
+          style={{ boxShadow: '0 0 0 4px rgba(217,255,50,0.15), 0 0 12px rgba(217,255,50,0.4)' }}
         />
-        <div className="w-[2px] flex-1 bg-[#D9FF32]" />
       </div>
 
       {/* Right content */}
       <div
-        className={`pl-10 lg:pl-20 flex flex-col gap-4 ${!isLeft ? 'items-start text-left' : ''}`}
+        className="pl-10 lg:pl-16 flex flex-col gap-3 items-start text-left"
         style={{
-          opacity: visible && !isLeft ? 1 : !isLeft ? 0 : undefined,
-          transform: visible && !isLeft ? 'translateX(0)' : !isLeft ? 'translateX(2rem)' : undefined,
-          transition: `opacity 0.7s ease ${index * 60}ms, transform 0.7s ease ${index * 60}ms`,
+          opacity: !isLeft ? (visible ? 1 : 0) : 1,
+          transform: !isLeft ? (visible ? 'translateX(0)' : 'translateX(40px)') : 'none',
+          visibility: !isLeft ? 'visible' : 'hidden',
+          transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 80}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 80}ms`,
         }}
       >
         {!isLeft && (
           <>
-            <h3 className="text-[3rem] sm:text-[4rem] lg:text-[5.5rem] font-bold text-white leading-none tracking-tight">
+            <span className="text-white/30 text-xs tracking-widest uppercase">{entry.period}</span>
+            <h3 className="text-[2.5rem] sm:text-[3.5rem] lg:text-[4.5rem] font-bold text-white leading-none tracking-tight">
               {entry.company}
             </h3>
-            <p className="text-white/40 text-lg lg:text-2xl font-light">{entry.role}</p>
-            <p className="text-white/25 text-sm lg:text-base leading-relaxed max-w-sm">{entry.desc}</p>
-            <p className="text-white/30 text-sm">{entry.period}</p>
+            <p className="text-white/50 text-base lg:text-lg font-light">{entry.role}</p>
+            <p className="text-white/25 text-sm leading-relaxed max-w-xs">{entry.desc}</p>
           </>
         )}
       </div>
@@ -141,14 +141,16 @@ const WorkExperienceTimeline = () => {
       </div>
 
       {/* Dark timeline */}
-      <div className="bg-[#1a1a1a] px-4 lg:px-8">
+      <div className="bg-[#1a1a1a] px-4 lg:px-8 relative">
+        {/* Single continuous neon line through all entries */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px]"
+          style={{ background: 'linear-gradient(to bottom, transparent 0%, #D9FF32 4%, #D9FF32 96%, transparent 100%)' }}
+        />
+
         {entries.map((entry, i) => (
           <TimelineEntry key={entry.company} entry={entry} index={i} />
         ))}
-        {/* Bottom cap of line */}
-        <div className="flex justify-center pb-8">
-          <div className="w-[2px] h-20 bg-[#D9FF32]/30" />
-        </div>
       </div>
     </section>
   );
