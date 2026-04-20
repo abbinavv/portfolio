@@ -40,15 +40,15 @@ const AnimatedWord = ({ children, index }: { children: React.ReactNode; index: n
 
 const AboutIntro = () => {
   const primaryWords = [
-    "I'm", "Aziz", "–", "a", "Full", "Stack", "Developer", "crafting", "fast,",
-    "scalable,", "and", "immersive", "digital", "experiences", "that", "merge",
-    "creativity", "with", "engineering", "precision."
+    "I'm", "Abhinav", "–", "an", "iOS", "developer,", "full-stack", "engineer",
+    "&", "UI/UX", "designer", "building", "apps", "and", "tools", "that",
+    "solve", "real", "problems", "with", "clean", "code", "and", "great", "design."
   ];
 
   const secondaryWords = [
-    "I", "specialize", "in", "developing", "SaaS", "platforms,", "AI-driven",
-    "products,", "and", "interactive", "3D", "web", "experiences", "using",
-    "technologies", "like", "Next.js,", "Node.js,", "and", "Three.js."
+    "I", "specialize", "in", "native", "iOS", "apps,", "full-stack", "web",
+    "applications,", "and", "machine", "learning", "solutions", "using",
+    "Swift,", "React,", "Python,", "and", "modern", "databases."
   ];
 
   return (
@@ -96,14 +96,14 @@ const AboutIntro = () => {
               <div className="absolute inset-0 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
               
               <div className="relative z-10 flex items-center">
-                <div className="relative overflow-hidden inline-block h-[1.2em]">
-                  <div className="block transition-transform duration-500 group-hover:-translate-y-full">
+                <span className="relative overflow-hidden block h-[1.15em]">
+                  <span className="block leading-none transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
                     About Me
-                  </div>
-                  <div className="block absolute top-0 left-0 transition-transform duration-500 translate-y-full group-hover:translate-y-0">
+                  </span>
+                  <span className="absolute top-0 left-0 w-full leading-none transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] translate-y-full group-hover:translate-y-0">
                     About Me
-                  </div>
-                </div>
+                  </span>
+                </span>
               </div>
             </div>
 

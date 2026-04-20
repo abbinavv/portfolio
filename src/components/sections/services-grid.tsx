@@ -1,67 +1,75 @@
+'use client';
+
 import React from 'react';
-import { Smartphone, Monitor, Disc, Network } from 'lucide-react';
+import { Smartphone, Globe, BrainCircuit, Palette } from 'lucide-react';
 
 const services = [
   {
     index: '01',
-    title: 'Full Stack Developer',
-    description: 'Building high-performance native iOS applications using Swift and SwiftUI. Creating seamless user experiences with elegant UI and robust architectures across the Apple ecosystem.',
-    icon: <Smartphone className="w-6 h-6 text-[#111111]" />,
+    title: 'iOS Development',
+    description: 'Building native iOS applications using Swift, SwiftUI, ARKit, and CoreML. From AR furniture visualization to retail inventory systems with barcode scanning and real-time data.',
+    icon: <Smartphone className="w-8 h-8 text-[#111111]" />,
   },
   {
     index: '02',
-    title: 'UI/UX Design & Frontend',
-    description: 'Designing modern, responsive interfaces with Figma, Tailwind CSS, and Framer Motion. Creating intuitive experiences with clean design systems and pixel-perfect implementations.',
-    icon: <Monitor className="w-6 h-6 text-[#111111]" />,
+    title: 'Full-Stack Development',
+    description: 'Developing end-to-end web applications with React, Flask, and Python. Implementing RESTful APIs, database design with PostgreSQL and Supabase, and clean frontend interfaces.',
+    icon: <Globe className="w-8 h-8 text-[#111111]" />,
   },
   {
     index: '03',
-    title: 'SaaS Platform Development',
-    description: 'Developing end-to-end SaaS solutions with subscription systems, Stripe billing, and multi-tenant management. Ensuring scalability and secure user management.',
-    icon: <Disc className="w-6 h-6 text-[#111111]" />,
+    title: 'Machine Learning & AI',
+    description: 'Applying TensorFlow, OpenCV, Scikit-learn, and CoreML to build intelligent systems. From real-time data visualization to predictive models and computer vision applications.',
+    icon: <BrainCircuit className="w-8 h-8 text-[#111111]" />,
   },
   {
     index: '04',
-    title: 'API & System Architecture',
-    description: 'Designing maintainable APIs with PostgreSQL, Prisma, and MongoDB. Focusing on performance optimization, security best practices, and reliable data flow.',
-    icon: <Network className="w-8 h-8 text-[#111111]" />,
+    title: 'UI/UX Design',
+    description: 'Designing intuitive interfaces with Figma and UIKit. Focused on user-centered design, clean design systems, interactive prototypes, and pixel-perfect implementation.',
+    icon: <Palette className="w-8 h-8 text-[#111111]" />,
   },
 ];
 
 const ServicesGrid = () => {
   return (
-    <section className="w-full bg-[#E6E6E6] border-t border-b border-[rgba(0,0,0,0.1)]">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 w-full">
+    <section className="w-full bg-[#E6E6E6] border-t border-black/10 overflow-hidden">
+      <div
+        className="flex overflow-x-auto snap-x snap-mandatory"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         {services.map((service, idx) => (
           <div
             key={service.index}
-            className={`
-              relative p-6 md:p-8 flex flex-col min-h-[320px] md:min-h-[360px] transition-colors duration-300 hover:bg-[#D9FF32]/5
-              ${idx !== services.length - 1 ? 'border-b xl:border-b-0 xl:border-r border-[rgba(0,0,0,0.1)]' : ''}
-              ${idx === 1 ? 'md:border-r xl:border-r' : ''}
-              ${idx === 0 || idx === 1 ? 'md:border-b xl:border-b-0' : ''}
-            `}
+            className="
+              relative flex-shrink-0 snap-start
+              w-[82vw] sm:w-[55vw] md:w-[42vw] lg:w-[33vw] xl:w-[25vw]
+              flex flex-col
+              min-h-[520px] lg:min-h-[580px]
+              p-10 lg:p-12
+              bg-[#EBEBEB]
+              border-r border-black/10
+            "
           >
-            <span className="absolute top-6 md:top-8 right-6 md:right-8 text-xs font-medium text-[#666666] font-display">
+            {/* Index */}
+            <span className="absolute top-10 right-10 lg:top-12 lg:right-12 text-sm text-black/25 font-display">
               {service.index}
             </span>
 
-            <div className="mb-6">
-              <div className="w-12 h-12 rounded-full bg-[#D9FF32] flex items-center justify-center">
-                {service.icon}
-              </div>
+            {/* Icon */}
+            <div className="w-[72px] h-[72px] rounded-full bg-[#D9FF32] flex items-center justify-center mb-12 shrink-0">
+              {service.icon}
             </div>
 
-            <div className="flex-grow flex flex-col gap-4">
-              <h3 className="text-xl md:text-2xl font-medium text-[#111111] font-display leading-tight">
-                {service.title}
-              </h3>
-              
-              <div className="mt-auto pt-4 border-t border-[rgba(0,0,0,0.1)]">
-                <p className="text-[#666666] text-sm leading-relaxed font-body">
-                  {service.description}
-                </p>
-              </div>
+            {/* Title */}
+            <h3 className="text-[1.9rem] md:text-[2.1rem] lg:text-[2.3rem] font-bold text-[#111111] font-display leading-[1.1] mb-auto">
+              {service.title}
+            </h3>
+
+            {/* Divider + description */}
+            <div className="mt-10 pt-7 border-t border-black/10">
+              <p className="text-[#555] text-[0.9rem] leading-relaxed">
+                {service.description}
+              </p>
             </div>
           </div>
         ))}

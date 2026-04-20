@@ -46,11 +46,12 @@ const ProfileStats: React.FC = () => {
         >
           <div className="relative aspect-[4/5] md:aspect-[16/10] lg:aspect-[16/9] w-full overflow-hidden">
             <Image
-              src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/me-sitting_37df8593-2.png"
-              alt="Aziz Khaldi - Full Stack Developer"
+              src="/abhinav-photo.png"
+              alt="Abhinav Raj - iOS Developer & Full Stack Engineer"
               fill
               priority
-              className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0"
+              className="object-cover transition-all duration-700"
+              style={{ filter: 'grayscale(1) contrast(1.2) brightness(0.9)', objectPosition: 'center 48%' }}
               sizes="(max-width: 768px) 100vw, 1280px"
             />
           </div>
@@ -61,14 +62,14 @@ const ProfileStats: React.FC = () => {
           {/* Left */}
           <div className="flex flex-col gap-6 border-t border-black/10 pt-8 pb-14 pr-0 md:pr-16">
             <p className="text-xl lg:text-2xl font-medium leading-snug text-black max-w-xs">
-              Driving measurable growth and engagement through thoughtful design and engineering.
+              Building real-world solutions through curiosity, engineering discipline, and a 9.42 CGPA at SRM.
             </p>
             <div className="mt-auto pt-6 border-t border-black/10">
               <span className="text-[0.62rem] font-medium tracking-[0.22em] text-black/40 uppercase block mb-3">
-                Years of Experience
+                CGPA at SRM Institute
               </span>
               <span className="text-[6rem] lg:text-[8rem] font-medium leading-[0.85] tracking-tighter">
-                4+
+                9.42
               </span>
             </div>
           </div>
@@ -76,14 +77,14 @@ const ProfileStats: React.FC = () => {
           {/* Right */}
           <div className="flex flex-col gap-6 border-t border-black/10 pt-8 pb-14 pl-0 md:pl-16 md:border-l md:border-l-black/10">
             <p className="text-sm lg:text-base leading-relaxed text-black/50">
-              Every product I build starts with understanding user goals and translating them into intuitive, high-performance experiences. From concept to launch, I focus on meaningful results — boosting user engagement, retention, and overall business impact.
+              From native iOS apps with AR and ML to full-stack web tools and data-driven systems — I take projects from first idea to working product, with attention to design, performance, and clean code.
             </p>
             <div className="mt-auto pt-6 border-t border-black/10">
               <span className="text-[0.62rem] font-medium tracking-[0.22em] text-black/40 uppercase block mb-3">
-                Projects Completed
+                Key Projects Built
               </span>
               <span className="text-[6rem] lg:text-[8rem] font-medium leading-[0.85] tracking-tighter">
-                30+
+                3+
               </span>
             </div>
           </div>
@@ -92,7 +93,7 @@ const ProfileStats: React.FC = () => {
         {/* Bottom tagline */}
         <div className="w-full py-16 lg:py-20">
           <p className="text-2xl lg:text-4xl font-medium leading-tight text-black max-w-3xl">
-            Transforming ideas into exceptional digital experiences through expertise and innovation
+            Transforming ideas into working products through engineering, design, and continuous learning
           </p>
         </div>
       </div>

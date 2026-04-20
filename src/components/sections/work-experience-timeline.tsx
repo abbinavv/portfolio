@@ -1,217 +1,155 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 
 const entries = [
   {
-    company: 'Techivation',
-    role: 'Full Stack Developer (Part-time)',
-    desc: "Building and maintaining Techivation's full web and SaaS ecosystem powering audio plugin licensing and management.",
-    period: 'May 2025 – Present',
-    side: 'left',
+    company: 'Infosys',
+    role: 'iOS Developer Intern',
+    desc: 'Developed iOS application modules using Swift and Xcode. Contributed to a retail operations platform covering inventory, cataloging, and barcode tracking.',
+    period: 'March 2026',
   },
   {
-    company: 'VexLogic',
-    role: 'Full Stack Engineer (Part-time)',
-    desc: 'Developing an AI-powered SaaS platform with real-time collaboration, billing systems, and intelligent document management.',
-    period: 'Jun 2025 – Present',
-    side: 'right',
+    company: 'UpSmart Solutions',
+    role: 'Software Development Intern',
+    desc: 'Delivered feature-level modules following structured development workflows. Participated in code reviews, debugging, and iterative product improvements.',
+    period: 'Dec 2025 – Feb 2026',
   },
   {
-    company: 'Comra AI',
-    role: 'Full Stack Developer (Full-time)',
-    desc: 'Building immersive 3D virtual tour systems using React Three Fiber, Prisma, and PostgreSQL for real estate and architecture.',
-    period: 'Nov 2024 – Present',
-    side: 'left',
-  },
-  {
-    company: 'DigitalNatives',
-    role: 'Frontend Developer (Full-time)',
-    desc: 'Delivered responsive, high-performance frontends for enterprise clients across e-commerce and media industries.',
-    period: 'Feb 2024 – Oct 2024',
-    side: 'right',
-  },
-  {
-    company: 'Fintechracy',
-    role: 'Frontend Developer (Full-time)',
-    desc: 'Developed a mobile-first PWA for financial management with offline storage, barcode scanning, and performance optimization.',
-    period: 'Nov 2023 – Mar 2024',
-    side: 'left',
-  },
-  {
-    company: 'Codintex',
-    role: 'Frontend Developer (Internship)',
-    desc: 'Built UI components and contributed to internal tools, gaining hands-on experience with React and modern web workflows.',
-    period: 'Jul 2022 – Sep 2023',
-    side: 'right',
+    company: 'BSNL',
+    role: 'Vocational Trainee',
+    desc: 'Gained hands-on exposure to telecom infrastructure, network routing systems, and enterprise-level network management in a government telecom environment.',
+    period: 'Jun 2025 – Jul 2025',
   },
 ] as const;
 
-function TimelineEntry({
-  entry,
-  index,
-  lineProgress,
-  totalEntries,
-}: {
-  entry: (typeof entries)[number];
-  index: number;
-  lineProgress: any;
-  totalEntries: number;
-}) {
+function TimelineEntry({ entry, index }: { entry: (typeof entries)[number]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [dotActive, setDotActive] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          setDotActive(true);
-        }
-      },
-      { threshold: 0.3, rootMargin: '0px 0px -10% 0px' }
+      ([e]) => { if (e.isIntersecting) setVisible(true); },
+      { threshold: 0.2 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
-  const isLeft = entry.side === 'left';
+  // Alternates: index 0 → right, index 1 → left, index 2 → right
+  const isRight = index % 2 === 0;
+
+  const content = (
+    <div
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : `translateY(32px)`,
+        transition: `opacity 0.85s cubic-bezier(0.16,1,0.3,1), transform 0.85s cubic-bezier(0.16,1,0.3,1)`,
+      }}
+      className={`flex flex-col gap-5 ${isRight ? 'text-left pl-10 lg:pl-16' : 'text-right pr-10 lg:pr-16 items-end'}`}
+    >
+      <span className="text-white/30 text-[0.68rem] tracking-[0.22em] uppercase font-mono">
+        {entry.period}
+      </span>
+      <h3 className="text-[2.8rem] sm:text-[3.8rem] lg:text-[5rem] xl:text-[6rem] font-bold text-white leading-[0.9] tracking-tight">
+        {entry.company}
+      </h3>
+      <p className="text-white/45 text-base lg:text-lg font-light tracking-wide">
+        {entry.role}
+      </p>
+      <p className={`text-white/22 text-sm leading-relaxed max-w-[340px] ${isRight ? '' : 'text-right'}`}>
+        {entry.desc}
+      </p>
+    </div>
+  );
 
   return (
-    <div
-      ref={ref}
-      className="relative grid grid-cols-[1fr_48px_1fr] items-center py-20 lg:py-28"
-    >
-      {/* Left content */}
-      <div
-        className="pr-10 lg:pr-16 flex flex-col gap-3 items-end text-right"
-        style={{
-          opacity: isLeft ? (visible ? 1 : 0) : 0,
-          transform: isLeft
-            ? visible
-              ? 'translateX(0)'
-              : 'translateX(-40px)'
-            : 'translateX(-40px)',
-          pointerEvents: isLeft ? 'auto' : 'none',
-          transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms`,
-        }}
-      >
-        {isLeft && (
-          <>
-            <span className="text-white/30 text-xs tracking-widest uppercase font-mono">
-              {entry.period}
-            </span>
-            <h3 className="text-[2.2rem] sm:text-[3rem] lg:text-[4rem] font-bold text-white leading-none tracking-tight">
-              {entry.company}
-            </h3>
-            <p className="text-white/50 text-base lg:text-lg font-light">{entry.role}</p>
-            <p className="text-white/25 text-sm leading-relaxed max-w-[280px]">{entry.desc}</p>
-          </>
-        )}
-      </div>
+    <div ref={ref} className="relative grid grid-cols-[1fr_2px_1fr] py-20 lg:py-28 items-start">
+      {/* Left slot */}
+      {isRight ? <div /> : content}
 
-      {/* Center dot */}
-      <div className="flex items-center justify-center z-10">
+      {/* Center — dot */}
+      <div className="relative flex justify-center">
         <div
-          className="w-3.5 h-3.5 rounded-full border-2 shrink-0 transition-all duration-500"
+          className="absolute top-4 w-[10px] h-[10px] rounded-full -translate-x-1/2 left-1/2 z-10 transition-all duration-700"
           style={{
-            background: dotActive ? '#D9FF32' : '#1a1a1a',
-            borderColor: '#D9FF32',
-            boxShadow: dotActive
-              ? '0 0 0 4px rgba(217,255,50,0.2), 0 0 16px rgba(217,255,50,0.7)'
-              : '0 0 0 3px rgba(217,255,50,0.1)',
+            background: '#1a1a1a',
+            border: '2px solid rgba(217,255,50,0.5)',
+            boxShadow: visible ? '0 0 0 4px rgba(217,255,50,0.12)' : 'none',
           }}
         />
       </div>
 
-      {/* Right content */}
-      <div
-        className="pl-10 lg:pl-16 flex flex-col gap-3 items-start text-left"
-        style={{
-          opacity: !isLeft ? (visible ? 1 : 0) : 0,
-          transform: !isLeft
-            ? visible
-              ? 'translateX(0)'
-              : 'translateX(40px)'
-            : 'translateX(40px)',
-          pointerEvents: !isLeft ? 'auto' : 'none',
-          transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms`,
-        }}
-      >
-        {!isLeft && (
-          <>
-            <span className="text-white/30 text-xs tracking-widest uppercase font-mono">
-              {entry.period}
-            </span>
-            <h3 className="text-[2.2rem] sm:text-[3rem] lg:text-[4rem] font-bold text-white leading-none tracking-tight">
-              {entry.company}
-            </h3>
-            <p className="text-white/50 text-base lg:text-lg font-light">{entry.role}</p>
-            <p className="text-white/25 text-sm leading-relaxed max-w-[280px]">{entry.desc}</p>
-          </>
-        )}
-      </div>
+      {/* Right slot */}
+      {isRight ? content : <div />}
     </div>
   );
 }
 
 const WorkExperienceTimeline = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const lineContainerRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start center', 'end center'],
+  // Background transitions from page-gray to dark over the heading area
+  const { scrollYProgress: bgProgress } = useScroll({
+    target: wrapperRef,
+    offset: ['start 80%', 'start 10%'],
   });
+  const backgroundColor = useTransform(bgProgress, [0, 1], ['#E6E6E6', '#1a1a1a']);
+  const headingTextColor = useTransform(bgProgress, [0, 0.6], ['#111111', '#ffffff']);
 
-  // Smooth spring so line flows naturally
-  const scaleY = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 20,
-    restDelta: 0.001,
+  // Lime line grows as you scroll through the entries
+  const { scrollYProgress: lineProgress } = useScroll({
+    target: lineContainerRef,
+    offset: ['start 70%', 'end 30%'],
   });
+  const scaleY = useSpring(lineProgress, { stiffness: 60, damping: 18, restDelta: 0.001 });
 
   return (
-    <section className="w-full font-display">
-      {/* Light heading section */}
-      <div className="bg-[#E6E6E6] px-8 lg:px-16 pt-16 pb-20 text-center">
-        <p className="text-2xl lg:text-4xl xl:text-5xl font-medium text-black leading-tight max-w-3xl mx-auto">
-          Explore my journey and the technologies that define my craft.
-        </p>
+    <motion.section
+      ref={wrapperRef}
+      className="w-full font-display overflow-hidden"
+      style={{ backgroundColor }}
+    >
+      {/* Heading */}
+      <div className="px-8 lg:px-20 pt-20 lg:pt-28 pb-16 lg:pb-20">
+        <motion.p
+          style={{ color: headingTextColor }}
+          className="text-2xl lg:text-4xl xl:text-5xl font-medium leading-[1.2] tracking-tight max-w-3xl"
+        >
+          Explore my journey and the experiences that define my craft.
+        </motion.p>
       </div>
 
-      {/* Dark timeline */}
-      <div ref={sectionRef} className="bg-[#1a1a1a] px-4 lg:px-8 relative">
-        {/* Static dim track line */}
+      {/* Entries area */}
+      <div ref={lineContainerRef} className="relative px-8 lg:px-20 pb-16">
+        {/* Background track line (faint) */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px]"
-          style={{ background: 'rgba(217,255,50,0.08)' }}
+          className="absolute top-0 bottom-0 w-[2px] pointer-events-none"
+          style={{ left: 'calc(50% + 40px)', background: 'rgba(217,255,50,0.06)' }}
         />
-
-        {/* Growing neon line — scaleY from 0→1, originY top */}
+        {/* Scroll-driven lime line */}
         <motion.div
-          className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] origin-top"
+          className="absolute top-0 bottom-0 w-[2px] origin-top pointer-events-none"
           style={{
+            left: 'calc(50% + 40px)',
             scaleY,
-            background: '#D9FF32',
-            boxShadow: '0 0 6px rgba(217,255,50,0.8), 0 0 20px rgba(217,255,50,0.4)',
+            background: 'linear-gradient(to bottom, #D9FF32 0%, rgba(217,255,50,0.3) 100%)',
+            boxShadow: '0 0 8px rgba(217,255,50,0.6), 0 0 24px rgba(217,255,50,0.25)',
           }}
         />
 
         {entries.map((entry, i) => (
-          <TimelineEntry
-            key={entry.company}
-            entry={entry}
-            index={i}
-            lineProgress={scaleY}
-            totalEntries={entries.length}
-          />
+          <TimelineEntry key={entry.company} entry={entry} index={i} />
         ))}
       </div>
-    </section>
+
+      {/* Bottom fade out */}
+      <div className="h-16 lg:h-20 bg-gradient-to-b from-[#1a1a1a] to-transparent pointer-events-none" />
+    </motion.section>
   );
 };
 

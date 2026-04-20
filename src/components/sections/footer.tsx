@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 /* Starburst icon matching original */
 const Starburst = () => (
@@ -77,9 +76,9 @@ const Footer = () => {
       const t = new Date().toLocaleTimeString('en-GB', {
         hour: '2-digit',
         minute: '2-digit',
-        timeZone: 'Africa/Algiers',
+        timeZone: 'Asia/Kolkata',
       });
-      setTime(`${t} UTC+2`);
+      setTime(`${t} IST`);
     };
     update();
     const id = setInterval(update, 60000);
@@ -121,7 +120,7 @@ const Footer = () => {
                   <FooterLink href="/" label="Home" />
                   <FooterLink href="/works" label="Work" />
                   <FooterLink href="/about-me" label="About" />
-                  <FooterLink href="mailto:contact@azizkhaldi.com" label="Contact" />
+                  <FooterLink href="mailto:abhinavraj00001@gmail.com" label="Contact" />
                 </div>
               </div>
 
@@ -131,10 +130,10 @@ const Footer = () => {
                   <h1 className="opacity-50 text-sm">SOCIALS</h1>
                 </div>
                 <div className="flex gap-1 flex-col whitespace-nowrap leading-6">
-                  <FooterLink href="mailto:contact@azizkhaldi.com" label="Email" />
-                  <FooterLink href="https://www.linkedin.com/in/aziz-khaldi-b28207261/" label="Linkdin" />
-                  <FooterLink href="https://wa.me/213779577865" label="Whatsapp" />
-                  <FooterLink href="https://github.com/AzizKhaldi01" label="Github" />
+                  <FooterLink href="mailto:abhinavraj00001@gmail.com" label="Email" />
+                  <FooterLink href="https://www.linkedin.com/in/abhinavraj" label="Linkdin" />
+                  <FooterLink href="https://wa.me/918002634000" label="Whatsapp" />
+                  <FooterLink href="https://github.com/abhinavraj" label="Github" />
                 </div>
               </div>
 
@@ -168,22 +167,22 @@ const Footer = () => {
           <div className="lg:flex-row lg:w-fit w-full lg:px-0 px-[1rem] md:items-start items-center flex-col flex gap-5 pt-10">
             <div className="w-full">
               <a
-                href="https://wa.me/213779577865"
+                href="https://wa.me/918002634000"
                 className="group relative overflow-hidden inline-flex lg:w-fit w-full items-center justify-center border border-white text-white cursor-pointer px-6 py-3 rounded-full hover:border-transparent transition-colors duration-300"
               >
                 <span className="relative z-10 group-hover:text-[#1e1e1e] transition-colors duration-300">
-                  +213779577865
+                  +91-8002634000
                 </span>
                 <span className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-full" />
               </a>
             </div>
             <div className="w-full">
               <a
-                href="mailto:contact@azizkhaldi.com"
+                href="mailto:abhinavraj00001@gmail.com"
                 className="group relative overflow-hidden inline-flex lg:w-fit w-full items-center justify-center border border-white text-white cursor-pointer px-6 py-3 rounded-full hover:border-transparent transition-colors duration-300"
               >
                 <span className="relative z-10 group-hover:text-[#1e1e1e] transition-colors duration-300">
-                  contact@azizkhaldi.com
+                  abhinavraj00001@gmail.com
                 </span>
                 <span className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-full" />
               </a>
@@ -193,21 +192,18 @@ const Footer = () => {
 
         {/* Bottom: Robot + Giant AZIZ */}
         <div className="flex flex-col items-center justify-center w-full relative">
-          {/* Robot */}
-          <div className="absolute xl:-top-[15em] lg:-top-[9em] xl:scale-90 lg:scale-[0.55] translate-x-1/2 right-1/2 lg:w-[450px] lg:h-[450px] w-[300px] h-[300px] hidden lg:block z-10">
-            <Image
-              src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/green-flower_7426aff1-1.avif"
-              alt="robot"
-              fill
-              className="object-contain"
-            />
+          {/* Decorative star */}
+          <div className="absolute xl:-top-[8em] lg:-top-[5em] translate-x-1/2 right-1/2 hidden lg:flex items-center justify-center z-10">
+            <svg viewBox="0 0 80 80" width="120" height="120" className="fill-white/10">
+              <path d="M40 0l5.88 28.12L80 40l-34.12 11.88L40 80l-5.88-28.12L0 40l34.12-11.88z" />
+            </svg>
           </div>
 
           {/* Giant name */}
           <div
-            className="font-righteous lg:leading-[28rem] leading-[10rem] lg:text-[20rem] xl:text-[30rem] text-[8rem] flex flex-col text-center"
+            className="font-display flex flex-col text-center" style={{ fontSize: 'clamp(5rem, 19vw, 22rem)', lineHeight: 0.88 }}
           >
-            <h1 className="text-white">AZIZ</h1>
+            <h1 className="text-white">ABHINAV</h1>
           </div>
         </div>
       </div>

@@ -1,26 +1,23 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+
+const Star = () => (
+  <svg viewBox="0 0 24 24" width="40" height="40" className="h-8 w-8 lg:h-12 lg:w-12 shrink-0 fill-[#111111]">
+    <path d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 22l-2.09-6.26L4 14l5.91-1.74z" />
+  </svg>
+);
+
+const textContent = "iOS DEVELOPER  FULL-STACK  UI & UX DESIGNER.";
+
+const MarqueeItem = () => (
+  <div className="flex items-center gap-6 lg:gap-10 shrink-0">
+    <Star />
+    <span className="whitespace-nowrap uppercase">{textContent}</span>
+  </div>
+);
 
 export default function ScrollingMarquee() {
-  const flowerAsset = "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/11924a9c-dc90-419c-887e-5382d3ba8158-azizkhaldi-com/assets/images/green-flower_7426aff1-1.avif";
-  const textContent = "FULL-STACK DEVELOPER UI & UX DESIGNER.";
-
-  const MarqueeItem = () => (
-    <div className="flex items-center gap-6 lg:gap-10 shrink-0">
-      <Image 
-        src={flowerAsset} 
-        alt="green flower" 
-        width={128} 
-        height={128} 
-        className="h-12 w-12 lg:h-24 lg:w-24 object-contain"
-        priority
-      />
-      <span className="whitespace-nowrap uppercase">{textContent}</span>
-    </div>
-  );
-
   return (
     <section className="relative w-full bg-[#E6E6E6] overflow-hidden py-12 lg:py-20 font-display">
       <div className="flex animate-marquee whitespace-nowrap items-center font-medium text-[2.5rem] md:text-[5rem] lg:text-[7rem] leading-none text-[#111111]">
