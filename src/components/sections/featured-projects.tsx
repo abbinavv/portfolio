@@ -137,7 +137,7 @@ const FeaturedProjects = () => {
                     )}
                     {isGitHub && (
                       <a
-                        href="https://github.com/abhinavraj000001"
+                        href="https://github.com/abbinavv"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 mt-1 text-sm font-medium transition-opacity duration-200 hover:opacity-70"

@@ -131,9 +131,9 @@ const Footer = () => {
                 </div>
                 <div className="flex gap-1 flex-col whitespace-nowrap leading-6">
                   <FooterLink href="mailto:abhinavraj00001@gmail.com" label="Email" />
-                  <FooterLink href="https://www.linkedin.com/in/abhinavraj" label="Linkdin" />
+                  <FooterLink href="https://www.linkedin.com/in/abhinav-raj-a1979421b" label="Linkdin" />
                   <FooterLink href="https://wa.me/918002634000" label="Whatsapp" />
-                  <FooterLink href="https://github.com/abhinavraj" label="Github" />
+                  <FooterLink href="https://github.com/abbinavv" label="Github" />
                 </div>
               </div>
 

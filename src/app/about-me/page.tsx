@@ -79,7 +79,7 @@ function AboutFooter() {
           </div>
           <div>
             <p className="text-[#666] text-[0.6rem] tracking-[0.25em] uppercase mb-6">Socials</p>
-            <ul className="flex flex-col gap-3">{[{l:"Email",h:"mailto:abhinavraj00001@gmail.com"},{l:"LinkedIn",h:"https://www.linkedin.com/in/abhinavraj"},{l:"Github",h:"https://github.com/abhinavraj"}].map(x=>(
+            <ul className="flex flex-col gap-3">{[{l:"Email",h:"mailto:abhinavraj00001@gmail.com"},{l:"LinkedIn",h:"https://www.linkedin.com/in/abhinav-raj-a1979421b"},{l:"Github",h:"https://github.com/abbinavv"}].map(x=>(
               <li key={x.l}><a href={x.h} target="_blank" rel="noopener noreferrer" className="text-white text-lg hover:text-[#D9FF32] transition-colors">{x.l}</a></li>
             ))}</ul>
           </div>
